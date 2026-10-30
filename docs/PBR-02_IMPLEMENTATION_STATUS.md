@@ -7,8 +7,8 @@
 - Gross oxygen conversion using explicit photosynthetic quotient.
 - Biomass and dissolved C/N/P reduced quota balances.
 - RK45 solver with square-wave forcing segmented at light transitions.
-- CSV export and plotting.
-- Automated tests for limiting cases, parameter validation, reduced carbon inventory closure, nutrient non-negativity and light-response functions.
+- CSV export, plotting, standard light-schedule scenarios and one-at-a-time sensitivity screening.
+- Automated tests for limiting cases, finite parameter validation, reduced C/N/P inventory closure, nutrient non-negativity, light-response functions, scenario execution and validation metrics.
 - SHA-labelled workflow runs, superseded-run cancellation and a Python 3.10/3.11/3.12 test matrix.
 
 ## Not yet complete
@@ -18,7 +18,7 @@
 - DIC carbonate chemistry and pH/alkalinity.
 - Gas headspace and kLa transfer.
 - Variable biomass elemental quotas and dissolved organic pools.
-- Independent experimental validation and error metrics.
+- Independent experimental validation against published time-series data (metrics utilities exist, but validation dataset pairing is not yet complete).
 - Circadian oscillator (reserved for PBR-03).
 
 ## Interpretation
