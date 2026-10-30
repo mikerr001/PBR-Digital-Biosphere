@@ -1,12 +1,14 @@
 parameter_id,organism,strain,parameter,value,unit,uncertainty,temperature_c,irradiance_umol_m2_s,medium,source_doi,evidence_class,status,notes
-SYNE_mu_max,,,,1/day,,,,,,,E1,missing,Extract directly measured growth kinetics under specified conditions
-SYNE_dark_respiration,,,,mmol_O2_gDW-1_day-1,,,,,,,E1,missing,Do not infer from net oxygen without documenting method
-SYNE_Pmax,,,,mmol_O2_gDW-1_day-1,,,,,,,E1,missing,Record whether gross or net photosynthesis
-SYNE_alpha,,,,organism-specific,,,,,,,E1,missing,Photosynthesis-irradiance initial slope and exact unit convention
-SYNE_beta,,,,organism-specific,,,,,,,E1,missing,Photoinhibition coefficient; omit if not measured
-SYNE_KN,,,,mmol_N_L-1,,,,,,,E1,missing,Nitrogen half-saturation constant
-SYNE_KP,,,,mmol_P_L-1,,,,,,,E1,missing,Phosphorus half-saturation constant
-SYNE_KC,,,,mmol_C_L-1,,,,,,,E1,missing,DIC limitation parameter; account for carbonate chemistry
-PHAEO_mu_max,,,,1/day,,,,,,,E1,missing,Independent Phaeodactylum measurement; never copy Synechococcus values
-PHAEO_dark_respiration,,,,mmol_O2_gDW-1_day-1,,,,,,,E1,missing,Measure or extract for this species and conditions
-PHAEO_Pmax,,,,mmol_O2_gDW-1_day-1,,,,,,,E1,missing,Record gross/net definition and method
+SYNE_mu_lowlight,Synechococcus elongatus,PCC 7942,growth_rate,0.047,h-1,0.004,30,60,BG-11,10.1016/j.ymben.2018.11.001,E1,measured,72 h low-light acclimation; continuous-light culture; study-specific condition
+SYNE_mu_highlight,Synechococcus elongatus,PCC 7942,growth_rate,0.081,h-1,0.015,30,600,BG-11,10.1016/j.ymben.2018.11.001,E1,measured,72 h high-light acclimation; continuous-light culture; study-specific condition
+SYNE_dark_resp_lowlight,Synechococcus elongatus,PCC 7942,dark_respiration,0.15,mmol O2 gDW-1 h-1,,30,60,BG-11,10.1016/j.ymben.2018.11.001,E1,measured,Dark respiration in low-light-acclimated culture
+SYNE_dark_resp_highlight,Synechococcus elongatus,PCC 7942,dark_respiration,0.41,mmol O2 gDW-1 h-1,,30,600,BG-11,10.1016/j.ymben.2018.11.001,E1,measured,Dark respiration in high-light-acclimated culture
+SYNE_KI,Synechococcus elongatus,PCC 7942,light_half_saturation,,,,,,,,,E1,missing,Do not infer from growth rate; extract fitted light-response data
+SYNE_PQ,Synechococcus elongatus,PCC 7942,photosynthetic_quotient,,,,,,,,,E1,missing,Require measured gross O2 and carbon fixation under matched conditions
+SYNE_RQ,Synechococcus elongatus,PCC 7942,respiratory_quotient,,,,,,,,,E1,missing,Require matched respiratory CO2 and O2 measurements
+SYNE_qC,Synechococcus elongatus,PCC 7942,biomass_carbon_quota,,,,,,,,,E1,missing,Require elemental biomass composition
+SYNE_qN,Synechococcus elongatus,PCC 7942,biomass_nitrogen_quota,,,,,,,,,E1,missing,Require elemental biomass composition
+SYNE_qP,Synechococcus elongatus,PCC 7942,biomass_phosphorus_quota,,,,,,,,,E1,missing,Require elemental biomass composition
+PHAEO_mu_max,Phaeodactylum tricornutum,study strain varies,growth_rate,,,,,,,,,E1,missing,Extract strain and exact culture conditions before use
+PHAEO_Pmax,Phaeodactylum tricornutum,study strain varies,gross_photosynthesis,,,,,,,,,E1,missing,Keep chlorophyll-normalised and dry-weight-normalised units distinct
+PHAEO_dark_resp,Phaeodactylum tricornutum,study strain varies,dark_respiration,,,,,,,,,E1,missing,Extract method and condition metadata
