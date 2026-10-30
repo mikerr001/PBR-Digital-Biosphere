@@ -14,7 +14,7 @@ def test_free_running_clock_keeps_24_hour_intrinsic_period_without_prc():
     assert result.iloc[-1]["phase_hours"] == pytest.approx(6.0)
 
 
-@pytest.mark.parametrize("period, expected", [(24.0, 78.0), (25.0, 76.08), (22.0, 84.5454545455)])
+@pytest.mark.parametrize("period, expected", [(24.0, 78.0), (25.0, 75.12), (22.0, 84.5454545455)])
 def test_intrinsic_period_controls_phase_velocity(period, expected):
     p = CircadianParameters(intrinsic_period_hours=period)
     result = simulate_circadian(72, [], p, 1.0)
