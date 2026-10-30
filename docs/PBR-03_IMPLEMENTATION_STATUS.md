@@ -1,24 +1,23 @@
 # PBR-03 Implementation Status
 
-## Implemented
-- Organism-scoped circadian module for *Synechococcus elongatus* PCC 7942.
-- Reduced phase oscillator with unwrapped and wrapped phase.
-- Separate light-on and light-off periodic phase-response curves.
-- Periodic PRC interpolation and instantaneous transition updates.
-- Bounded morning-output proxy for downstream analysis.
-- Daily, shifted and irregular light schedules.
-- Validation of parameter dimensions, transition times and simulation inputs.
-- Regression tests for free-running phase, neutral PRCs and phase resetting.
+## Implemented software
+- Organism-scoped *Synechococcus elongatus* PCC 7942 circadian module.
+- Reduced phase oscillator with unwrapped/wrapped phase and correct intrinsic-period phase velocity (24/tau).
+- Separate light-on and light-off periodic PRCs with periodic interpolation; neutral zero-PRC defaults.
+- Bounded morning-output analysis proxy.
+- Independent bounded light-acclimation state driven by irradiance history, with distinct increase/decrease time constants.
+- Daily, shifted and irregular light schedules and matched circadian experiment suite.
+- Input validation and regression tests for phase velocity, PRCs, schedule handling and acclimation dynamics.
 
-## Not yet implemented
-- Molecular KaiABC phosphorylation/complex kinetics.
+## Not implemented / not biologically parameterised
+- Molecular KaiABC phosphorylation and complex kinetics.
 - ATP/ADP- and redox-dependent biochemical input model.
 - SasA/CikA/RpaA signalling kinetics.
-- Evidence-fitted in-vivo PRCs.
-- Empirically calibrated output waveform/phase windows.
+- Evidence-fitted in-vivo PRCs and calibrated output waveform.
+- Empirically fitted acclimation parameters and a named measured acclimation trait.
 - Clock-dependent glycogen/metabolite allocation.
 - Coupling to PBR-02 growth, photosynthesis or oxygen balances.
-- Independent validation against measured time-series.
+- Independent biological validation against measured time series.
 
-## Decision
-Keep the clock subsystem independent until organism- and condition-matched data support a specific coupling mechanism. A passing software test suite validates code behaviour, not circadian biology.
+## Release interpretation
+PBR-03 is a tested computational scaffold, not a validated circadian biology model and not a productivity or life-support controller. Passing CI verifies software behaviour only. Do not interpret the phase-output proxy or acclimation state as measured molecular quantities.

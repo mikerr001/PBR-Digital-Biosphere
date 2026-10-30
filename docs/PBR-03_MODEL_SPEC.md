@@ -1,51 +1,28 @@
-# PBR-03 Circadian Regulation Model Specification v0.1
+# PBR-03 Circadian and Acclimation Model Specification v0.2
 
-## Purpose and scope
-PBR-03 adds a separately testable circadian timing subsystem for *Synechococcus elongatus* PCC 7942. It does not replace PBR-02 physiology and does not yet alter growth, carbon fixation or oxygen production. PBR-02 remains the no-clock physiological baseline.
-
-*Phaeodactylum tricornutum* remains a separate marine comparison. No KaiABC equations or cyanobacterial parameters are transferred to this diatom.
+## Purpose and organism boundary
+PBR-03 adds separately testable timing and light-history states for *Synechococcus elongatus* PCC 7942. PBR-02 remains the physiological baseline. PBR-03 does not yet change growth, carbon fixation or oxygen production. *Phaeodactylum tricornutum* remains a separate marine comparison; no KaiABC equations or cyanobacterial parameters are transferred to it.
 
 ## Biological basis
-The primary organism has a post-translational KaiABC oscillator. KaiA promotes KaiC phosphorylation; KaiB antagonises KaiA activity as the oscillator progresses through phosphorylation/dephosphorylation states. KaiC timing communicates with output pathways including SasA/CikA and the response regulator RpaA. Light-dependent energy/redox state can influence clock timing through metabolic inputs. Clock output can influence metabolic timing, including morning metabolite partitioning.
+The primary organism has a post-translational KaiABC oscillator. KaiA promotes KaiC phosphorylation; KaiB antagonises KaiA activity as the cycle progresses. Timing communicates with output pathways including SasA/CikA and RpaA. Cellular energy/redox state can influence clock timing, and clock output can influence metabolic timing. Direct light-driven metabolic responses can also generate daily rhythms without clock control; daily periodicity alone is not evidence of circadian causation.
 
-The literature also shows that light-dark cycles can generate metabolic rhythms independently of the clock. Therefore observed daily oscillations must not automatically be attributed to circadian control.
+## Implemented phase representation
+A reduced phase oscillator represents clock timing using an unwrapped clock-hour coordinate. Its velocity is 24/tau clock-hours per elapsed culture-hour, where tau is the intrinsic period. Light-on and light-off events apply separate periodic phase-response curves (PRCs), interpolated linearly between equally spaced phase bins. Default PRCs are zero, so the clock free-runs until evidence-derived PRCs are supplied. The bounded morning-output window is an analysis proxy, not a biochemical RpaA activity equation.
 
-## Implemented mathematical representation
-PBR-03 v0.1 implements a **reduced phase oscillator with empirical phase-response curves (PRCs)**:
-- Unwrapped phase advances at the intrinsic period between environmental transitions.
-- Light-on and light-off transitions apply separate phase shifts.
-- Each PRC is a periodic lookup table indexed by clock phase, with linear interpolation.
-- A bounded morning-output proxy represents a candidate phase-gated clock output window. It is an output feature for analysis only; it is not a validated RpaA biochemical activity equation.
+This is not a molecular KaiABC phosphorylation ODE. It does not invent kinetic constants for KaiA, KaiB, KaiC, SasA, CikA or RpaA.
 
-This phase model is deliberately not presented as a molecular KaiABC phosphorylation ODE. It avoids inventing kinetic constants for KaiA, KaiB, KaiC, SasA, CikA or RpaA when matched biochemical data have not yet been curated.
+## Separate light-acclimation representation
+A second, independent state describes generic light-history acclimation. Its target is I/(I+K), with separate first-order time constants for increasing and decreasing acclimation. It is driven by an irradiance time series and remains bounded in [0,1]. This is a phenomenological state descriptor, not a measured pigment, photosystem, enzyme or cell-volume variable. Its parameters are provisional and it is not coupled to photosynthetic productivity, growth or oxygen evolution.
 
-## Default parameter status
-The intrinsic period and initial phase defaults are simulation scaffolding. PRCs default to zero phase shift, which means the default clock free-runs and does not entrain. This neutral default is intentional: it prevents fabricated entrainment. Experimental PRC values must be extracted for the correct strain, temperature, light intensity, pulse duration and phase convention before enabling a biological entrainment claim.
+The clock phase and acclimation state are intentionally separate: entrainment is not acclimation, and neither is assumed to improve productivity.
 
-The morning output window and transition width are illustrative analysis settings, not experimentally calibrated transcriptional thresholds.
+## Scenario suite
+- Free-running phase, regular 12:12, shifted 12:12 and deterministic irregular light.
+- Independent light-acclimation response to user-supplied irradiance histories.
+- Comparisons should distinguish direct environmental responses from clock-dependent residual rhythms.
 
-## Scenarios
-- Free-running clock with no transitions.
-- Repeated 12:12 light-dark schedule.
-- Abruptly shifted light schedule.
-- Irregular light-pulse schedule.
-- User-supplied light transition sequence.
+## Parameter status and limitations
+Intrinsic period, initial phase, PRCs, output window, acclimation half-saturation and acclimation time constants are simulation scaffolding until matched experimental evidence is curated. There are no molecular KaiABC or SasA/CikA/RpaA kinetics; no ATP/ADP/redox feedback; no fitted in-vivo PRCs; no validated transcriptional output waveform; no glycogen/metabolite allocation model; and no coupling to PBR-02 carbon, growth or oxygen balances. No validated *Phaeodactylum* clock model is included.
 
-## Required comparisons
-1. Environment-driven rhythm with clock disabled.
-2. Clock phase model with zero PRC (free run).
-3. Clock phase model with experimentally measured PRCs.
-4. Phase-gated output proxy against measured clock-output/metabolite time series.
-
-PBR-03 must not apply a generic sinusoidal multiplier to PBR-02 growth or oxygen rates. Coupling is deferred until a named metabolic pathway, measured response function and compatible time-series dataset are identified.
-
-## Limitations and validation gates
-- No explicit KaiC phosphorylation states (S/T sites), KaiA/KaiB complex kinetics or ATP/ADP-dependent kinase rates.
-- No explicit SasA/CikA/RpaA biochemical network.
-- No fitted in-vivo PRCs or organism-specific phase-response datasets yet.
-- No metabolic feedback from glycogen/ATP/ADP/redox to the oscillator.
-- No coupling to biomass growth, carbon fixation or oxygen balances.
-- No validated Phaeodactylum clock model.
-- No biological or experimental validation completed by this software milestone.
-
-Before PBR-03 can be called biologically parameterised: curate primary-source phase-response data, define phase zero consistently, fit/interpolate PRCs, test entrainment range and phase stability, and compare predicted clock-output/metabolite timing with independent observations.
+## Required validation
+Record strain/genotype, temperature, irradiance and spectrum, photoperiod, pulse timing/duration, phase convention, sampling interval, replicates, assay and uncertainty. Fit light/dark PRCs independently and report uncertainty. Validate free-running period and phase against independent time series. Validate acclimation kinetics against measured light-history-dependent traits before interpreting its state biologically. Use clock-disrupted controls and constant-condition experiments to separate circadian effects from direct light response. Any claim about oxygen productivity requires direct, matched oxygen measurements.

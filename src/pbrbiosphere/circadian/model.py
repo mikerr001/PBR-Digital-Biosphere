@@ -1,10 +1,7 @@
 """Reduced phase-oscillator model for KaiABC entrainment.
 
-This is deliberately NOT a molecular KaiA/KaiB/KaiC phosphorylation ODE.
-It represents experimentally measurable phase dynamics using an explicit,
-periodic phase-response curve (PRC). PRC entries must ultimately be fitted
-from organism/condition-specific data. Zero-valued default PRCs mean that
-light transitions do not reset the clock until calibrated.
+This is not a molecular KaiA/KaiB/KaiC phosphorylation ODE. It represents
+measurable phase dynamics using empirical phase-response curves (PRCs).
 """
 from dataclasses import dataclass
 import math
@@ -25,11 +22,7 @@ class LightTransition:
 
 @dataclass(frozen=True)
 class CircadianParameters:
-    """Phase model parameters; all PRC values are phase shifts in hours.
-
-    PRCs are periodic lookup tables at equally spaced circadian phases.
-    The defaults are neutral (no entrainment), not claimed biological fits.
-    """
+    """Phase model parameters; PRC values are phase shifts in clock-hours."""
     intrinsic_period_hours: float = 24.0
     initial_phase_hours: float = 6.0
     prc_bins: int = 8
@@ -65,7 +58,7 @@ def _periodic_prc(phase_hours: float, values: tuple[float, ...], period: float) 
 
 
 def _smooth_window(phase_hours: float, start: float, end: float, width: float) -> float:
-    """Bounded smooth morning output window; not a sinusoidal clock surrogate."""
+    """Bounded smooth analysis window; not a sinusoidal clock surrogate."""
     def sigmoid(x: float) -> float:
         if x >= 0:
             z = math.exp(-min(x, 700.0))
@@ -78,12 +71,11 @@ def _smooth_window(phase_hours: float, start: float, end: float, width: float) -
 def simulate_circadian(duration_hours: float, transitions: list[LightTransition],
                        parameters: CircadianParameters | None = None,
                        sample_interval_hours: float = 0.25) -> pd.DataFrame:
-    """Simulate free-running phase with instantaneous light/dark PRC resets.
+    """Simulate clock phase; transitions apply empirical instantaneous PRCs.
 
-    A transition at t=0 establishes the initial light state but does not apply
-    a phase reset. Each later transition applies its matching PRC evaluated at
-    the phase immediately before that transition. Phase is retained in an
-    unwrapped hour coordinate; phase_hours is wrapped to one clock period.
+    Phase is measured in clock-hours. Its rate is 24/tau clock-hours per
+    elapsed culture-hour, so the requested intrinsic period is respected.
+    A t=0 transition sets environmental context but does not reset phase.
     """
     p = parameters or CircadianParameters()
     p.validate()
@@ -104,21 +96,22 @@ def simulate_circadian(duration_hours: float, transitions: list[LightTransition]
         sample_times = np.append(sample_times, duration_hours)
     phase_unwrapped = p.initial_phase_hours
     current_time = 0.0
+    phase_rate = 24.0 / p.intrinsic_period_hours
     transition_map = {item.time_hours: item for item in ordered if item.time_hours > 0}
     records = []
     for t in sample_times:
         while current_time < t - 1e-12:
             next_transition = min((v for v in transition_map if current_time < v <= t), default=None)
             stop = next_transition if next_transition is not None else t
-            phase_unwrapped += (stop - current_time)
+            phase_unwrapped += (stop - current_time) * phase_rate
             current_time = stop
             if next_transition is not None:
                 item = transition_map[next_transition]
-                phase = phase_unwrapped % p.intrinsic_period_hours
+                phase = phase_unwrapped % 24.0
                 prc = p.light_prc_hours if item.light_on else p.dark_prc_hours
-                phase_unwrapped += _periodic_prc(phase, prc, p.intrinsic_period_hours)
+                phase_unwrapped += _periodic_prc(phase, prc, 24.0)
                 del transition_map[next_transition]
-        phase = phase_unwrapped % p.intrinsic_period_hours
+        phase = phase_unwrapped % 24.0
         records.append((t, phase_unwrapped, phase,
                         _smooth_window(phase, p.morning_output_start_hours,
                                        p.morning_output_end_hours,

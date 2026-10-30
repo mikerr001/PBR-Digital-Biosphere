@@ -2,11 +2,7 @@
 
 Research codebase for a mechanistic photobioreactor and regenerative-habitat digital twin.
 
-## Current milestone: PBR-03
-
-PBR-03 adds a separate reduced circadian phase/entrainment subsystem for *Synechococcus elongatus* PCC 7942. It is not yet biologically parameterised: default phase-response curves are zero and no clock effect is applied to PBR-02 growth or oxygen balances. See `docs/PBR-03_MODEL_SPEC.md` and `docs/PBR-03_VALIDATION_PLAN.md`.
-
-## Previous milestone: PBR-02
+## Current milestone: PBR-02
 
 PBR-02 implements a reduced, well-mixed algal-culture physiology prototype. It is executable and testable, but **not yet biologically validated**. Default values are software-demo assumptions. Only source-traceable measurements in the evidence register should be used as biological parameters.
 
@@ -61,10 +57,3 @@ The CLI writes a baseline CSV, five scenario CSVs and plots under `results/`.
 
 ## Safety boundary
 This research simulator must not be used to size, operate or certify human oxygen supply, underwater habitats, pressure vessels or life-support systems.
-
-
-### PBR-03 circadian module
-- Reduced phase oscillator with separate light-on/light-off empirical PRC tables.
-- Free-running, regular, shifted and irregular-light experiments.
-- Morning-output proxy for analysis only; no unvalidated growth/O2 multiplier.
-- KaiABC equations are not assigned to *Phaeodactylum tricornutum*.

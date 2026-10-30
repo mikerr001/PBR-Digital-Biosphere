@@ -1,6 +1,6 @@
-name: PBR-02 verification
+name: PBR Digital Biosphere verification
 
-run-name: PBR-02 verification • ${{ github.ref_name }} • ${{ github.sha }}
+run-name: PBR verification • ${{ github.ref_name }} • ${{ github.sha }}
 
 on:
   push:
@@ -19,10 +19,8 @@ on:
       - ".github/workflows/tests.yml"
   workflow_dispatch:
 
-# A newer commit supersedes an older unstarted verification run on the same ref.
-# Each run has a unique visible name containing its commit SHA.
 concurrency:
-  group: pbr02-${{ github.workflow }}-${{ github.ref }}
+  group: pbr-verification-${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true
 
 permissions:
