@@ -1,0 +1,12 @@
+parameter_id,organism,strain,parameter,value,unit,uncertainty,temperature_c,irradiance_umol_m2_s,medium,source_doi,evidence_class,status,notes
+SYNE_mu_max,,,,1/day,,,,,,,E1,missing,Extract directly measured growth kinetics under specified conditions
+SYNE_dark_respiration,,,,mmol_O2_gDW-1_day-1,,,,,,,E1,missing,Do not infer from net oxygen without documenting method
+SYNE_Pmax,,,,mmol_O2_gDW-1_day-1,,,,,,,E1,missing,Record whether gross or net photosynthesis
+SYNE_alpha,,,,organism-specific,,,,,,,E1,missing,Photosynthesis-irradiance initial slope and exact unit convention
+SYNE_beta,,,,organism-specific,,,,,,,E1,missing,Photoinhibition coefficient; omit if not measured
+SYNE_KN,,,,mmol_N_L-1,,,,,,,E1,missing,Nitrogen half-saturation constant
+SYNE_KP,,,,mmol_P_L-1,,,,,,,E1,missing,Phosphorus half-saturation constant
+SYNE_KC,,,,mmol_C_L-1,,,,,,,E1,missing,DIC limitation parameter; account for carbonate chemistry
+PHAEO_mu_max,,,,1/day,,,,,,,E1,missing,Independent Phaeodactylum measurement; never copy Synechococcus values
+PHAEO_dark_respiration,,,,mmol_O2_gDW-1_day-1,,,,,,,E1,missing,Measure or extract for this species and conditions
+PHAEO_Pmax,,,,mmol_O2_gDW-1_day-1,,,,,,,E1,missing,Record gross/net definition and method
