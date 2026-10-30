@@ -6,10 +6,11 @@
 - Ideal-gas headspace partial pressures.
 - Lumped liquid thermal rate with explicit unit conversion.
 - Instantaneous physical-rate assembly API.
+- Two-compartment signed exchange helper parameterised by measured mixing time.
 - Automated tests for geometry, optical attenuation, transfer direction/equilibrium, heat direction/scaling and validation.
 
 ## Not implemented
-- CFD, bubble hydrodynamics, mixing or circulation.
+- CFD, bubble hydrodynamics, circulation or integrated time-dependent compartment mixing.
 - Spectral radiative transfer, scattering or photoinhibition.
 - Carbonate chemistry, total DIC speciation, pH or alkalinity.
 - Gas venting, leakage, pressure regulation or compressor dynamics.
