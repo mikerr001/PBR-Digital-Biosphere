@@ -1,6 +1,6 @@
 """Evidence-provenance validation for parameter-register rows."""
 from math import isfinite
-ALLOWED_CLASSES={"measured","literature_derived","fitted","estimated","unknown","E1"}
+ALLOWED_CLASSES={"measured","literature_derived","fitted","estimated","unknown","e1"}
 REQUIRED=("parameter_id","organism","strain","parameter","unit","evidence_class","status","source_doi","notes")
 def validate_parameter_record(record):
     """Return audit findings; E1 is accepted as the legacy evidence-tier code."""
