@@ -1,5 +1,6 @@
 """Typed model configuration. Defaults are software-demo assumptions, not biology data."""
 from dataclasses import dataclass
+import math
 
 
 @dataclass(frozen=True)
@@ -15,12 +16,12 @@ class ModelParameters:
     k_n: float = 0.10
     k_p: float = 0.01
     k_c: float = 0.20
-    respiration: float = 0.50       # mmol O2 gDW-1 day-1
-    respiratory_quotient: float = 1.0  # mmol C released / mmol O2 consumed
-    photosynthetic_quotient: float = 1.0  # mmol O2 / mmol C fixed
-    q_c: float = 35.0               # mmol C / gDW; demo assumption
-    q_n: float = 8.0                # mmol N / gDW; demo assumption
-    q_p: float = 0.8                # mmol P / gDW; demo assumption
+    respiration: float = 0.50
+    respiratory_quotient: float = 1.0
+    photosynthetic_quotient: float = 1.0
+    q_c: float = 35.0
+    q_n: float = 8.0
+    q_p: float = 0.8
 
     def validate(self) -> None:
         positive = ("mu_max", "k_light", "k_n", "k_p", "k_c",
@@ -28,11 +29,13 @@ class ModelParameters:
                     "q_c", "q_n", "q_p")
         nonnegative = ("decay", "respiration")
         for name in positive:
-            if getattr(self, name) <= 0:
-                raise ValueError(f"{name} must be > 0")
+            value = getattr(self, name)
+            if not math.isfinite(value) or value <= 0:
+                raise ValueError(f"{name} must be finite and > 0")
         for name in nonnegative:
-            if getattr(self, name) < 0:
-                raise ValueError(f"{name} must be >= 0")
+            value = getattr(self, name)
+            if not math.isfinite(value) or value < 0:
+                raise ValueError(f"{name} must be finite and >= 0")
 
 
 @dataclass(frozen=True)
@@ -46,8 +49,8 @@ class InitialState:
 
     def validate(self) -> None:
         for name, value in vars(self).items():
-            if value < 0:
-                raise ValueError(f"initial {name} must be >= 0")
+            if not math.isfinite(value) or value < 0:
+                raise ValueError(f"initial {name} must be finite and >= 0")
 
 
 @dataclass(frozen=True)
@@ -58,6 +61,10 @@ class Environment:
     day_hours: float = 24.0
 
     def validate(self) -> None:
+        values = (self.temperature_c, self.irradiance,
+                  self.photoperiod_hours, self.day_hours)
+        if not all(math.isfinite(v) for v in values):
+            raise ValueError("environment values must be finite")
         if self.irradiance < 0:
             raise ValueError("irradiance must be >= 0")
         if self.day_hours <= 0:
