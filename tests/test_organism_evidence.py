@@ -9,7 +9,8 @@ def test_synechococcus_observations_preserve_source_conditions():
 
 
 def test_hour_to_day_conversion():
-    assert rate_per_day(0.05) == 1.2
+    from pytest import approx
+    assert rate_per_day(0.05) == approx(1.2)
 
 
 def test_phaeodactylum_not_assigned_kaiabc():
