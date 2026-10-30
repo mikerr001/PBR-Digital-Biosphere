@@ -1,0 +1,8 @@
+component,claim_to_test,required_observations,fit_dataset,independent_holdout,metrics,status,blocking_issue
+biology_growth,growth response to light and nutrients,biomass time series plus conditions,training experiment,independent strain-matched experiment,bias MAE RMSE uncertainty coverage,not validated,source extraction and identifiability
+gross_oxygen,gross oxygen evolution vs PAR,gross O2 with dark respiration separated,training experiment,independent experiment,bias MAE RMSE,not validated,current model infers O2 from carbon bookkeeping
+carbonate,pH and carbonate species,DIC total alkalinity pH temperature salinity,calibration experiment,independent chemistry experiment,pH and species residuals,prototype only,omitted alkalinity species and medium-specific constants
+oxygen_transfer,O2 kLa,abiotic gas-transfer transient,training transfer experiment,independent transfer experiment,kLa error and inventory closure,not validated,no measured kLa register
+carbon_transfer,CO2 kLa and dissolved CO2,CO2 transfer plus DIC TA pH,training transfer experiment,independent transfer experiment,kLa error and carbon closure,not validated,carbonate model incomplete for actual media
+optics,PAR attenuation profile,incident and depth-resolved PAR,training optical experiment,independent optical experiment,profile RMSE and bias,not validated,no measured optical dataset
+thermal,temperature transient,temperature time series and heat inputs,training thermal experiment,independent thermal experiment,temperature RMSE and energy residual,not validated,no thermal parameter identification
