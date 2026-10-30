@@ -46,6 +46,11 @@ def test_parameter_validation_rejects_invalid_quotient():
         run_simulation(params=ModelParameters(photosynthetic_quotient=0))
 
 
+def test_parameter_validation_rejects_nonfinite_values():
+    with pytest.raises(ValueError):
+        run_simulation(params=ModelParameters(mu_max=float("nan")))
+
+
 def test_carbon_inventory_closes_in_reduced_model():
     p, s = ModelParameters(), InitialState()
     df = run_simulation(days=1, points=101, params=p, initial=s)
