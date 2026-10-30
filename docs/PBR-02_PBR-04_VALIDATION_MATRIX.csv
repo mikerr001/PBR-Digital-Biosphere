@@ -1,0 +1,10 @@
+test_id,subsystem,quantity,validation_method,required_measurement,status
+V01,geometry,liquid_volume,calculated panel volume vs gravimetric fill,dimensions and fill mass/density,software-only
+V02,optics,path-average PAR,depth-resolved PAR profile across biomass concentrations,calibrated PAR sensor at multiple depths,not_started
+V03,biology,growth_rate,independent biomass time series,OD calibrated to dry weight or gravimetric dry weight,not_started
+V04,biology,oxygen_evolution,independent dissolved plus off-gas oxygen balance,dissolved O2 and headspace/off-gas O2,not_started
+V05,gas_transfer,O2_kLa,dynamic gassing or re-aeration method with mixing metadata,dissolved O2 transient and gas flow,not_started
+V06,thermal,liquid_temperature,transient heat-up/cool-down fit,liquid and ambient temperature time series,not_started
+V07,carbon,DIC_and_CO2_transfer,carbonate-system closure using total alkalinity and DIC,pH alkalinity DIC and dissolved molecular CO2,blocked_by_carbonate_model
+V08,mixing,well_mixed_assumption,spatial tracer or temperature/DO gradient test,multiple-location concentration measurements,not_started
+V09,integrated_model,trajectory_prediction,blind holdout against independent coupled dataset,all above with synchronized timestamps,blocked_by_V02_to_V06
