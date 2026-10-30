@@ -1,0 +1,44 @@
+"""Reduced biological response functions for the PBR-02 scaffold."""
+import math
+from .config import ModelParameters
+
+
+def light_fraction(irradiance: float, k_light: float) -> float:
+    """Monod-type light saturation, dimensionless; no photoinhibition."""
+    if irradiance < 0 or k_light <= 0:
+        raise ValueError("irradiance must be >= 0 and k_light must be > 0")
+    return irradiance / (k_light + irradiance)
+
+
+def nutrient_fraction(concentration: float, half_saturation: float) -> float:
+    """Monod limitation, dimensionless."""
+    if concentration < 0 or half_saturation <= 0:
+        raise ValueError("concentration must be >= 0 and K must be > 0")
+    return concentration / (half_saturation + concentration)
+
+
+def temperature_fraction(temperature_c: float) -> float:
+    """Placeholder temperature response.
+
+    Returns 1.0 at all temperatures until organism-specific cardinal
+    temperature data are entered. This is explicitly not a thermal model.
+    """
+    if not math.isfinite(temperature_c):
+        raise ValueError("temperature must be finite")
+    return 1.0
+
+
+def growth_rate(x: float, dic: float, nitrogen: float, phosphorus: float,
+                irradiance: float, temperature_c: float,
+                p: ModelParameters) -> float:
+    """Specific growth rate in 1/day.
+
+    Uses Liebig minimum nutrient limitation and a Monod DIC term.
+    """
+    if x < 0:
+        raise ValueError("biomass cannot be negative")
+    f_i = light_fraction(irradiance, p.k_light)
+    f_n = nutrient_fraction(nitrogen, p.k_n)
+    f_p = nutrient_fraction(phosphorus, p.k_p)
+    f_c = nutrient_fraction(dic, p.k_c)
+    return p.mu_max * f_i * min(f_n, f_p) * f_c * temperature_fraction(temperature_c)
