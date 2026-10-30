@@ -50,6 +50,15 @@ def test_nitrogen_and_phosphorus_remain_nonnegative():
     assert (df["phosphorus_mmol_L"] >= 0).all()
 
 
+def test_nitrogen_and_phosphorus_inventories_close():
+    p, s = ModelParameters(), InitialState()
+    df = run_simulation(days=1, points=101, params=p, initial=s)
+    total_n = df["nitrogen_mmol_L"] + p.q_n * df["biomass_gDW_L"]
+    total_p = df["phosphorus_mmol_L"] + p.q_p * df["biomass_gDW_L"]
+    assert np.allclose(total_n, total_n.iloc[0], rtol=2e-6, atol=2e-7)
+    assert np.allclose(total_p, total_p.iloc[0], rtol=2e-6, atol=2e-7)
+
+
 def test_light_dark_boundaries_are_integrated():
     df = run_simulation(days=3, points=301, environment=Environment(photoperiod_hours=12))
     assert np.isfinite(df.to_numpy()).all()
