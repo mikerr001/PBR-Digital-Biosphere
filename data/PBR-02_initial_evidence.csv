@@ -1,0 +1,6 @@
+parameter_id,organism,strain,parameter,value,unit,uncertainty,temperature_c,irradiance_umol_m2_s,medium,source_doi,evidence_class,status,notes
+SYNE_mu_lowlight,Synechococcus elongatus,PCC 7942,growth_rate,0.047,h-1,0.004,30,60,BG-11,10.1016/j.ymben.2018.11.001,E1,measured,72 h low-light acclimation; continuous-light culture; mid-exponential phase
+SYNE_mu_highlight,Synechococcus elongatus,PCC 7942,growth_rate,0.081,h-1,0.015,30,600,BG-11,10.1016/j.ymben.2018.11.001,E1,measured,72 h high-light acclimation; continuous-light culture; mid-exponential phase
+SYNE_dark_resp_lowlight,Synechococcus elongatus,PCC 7942,dark_respiration,0.15,mmol O2 gDW-1 h-1,,30,60,BG-11,10.1016/j.ymben.2018.11.001,E1,measured,Dark respiration in low-light-acclimated culture; retain acclimation context
+SYNE_dark_resp_highlight,Synechococcus elongatus,PCC 7942,dark_respiration,0.41,mmol O2 gDW-1 h-1,,30,600,BG-11,10.1016/j.ymben.2018.11.001,E1,measured,Dark respiration in high-light-acclimated culture; retain acclimation context
+PHAEO_Pmax_blue, Phaeodactylum tricornutum,study strain not normalised here,photosynthesis_Pmax,,umol O2 mg chlorophyll a-1 h-1,,,"",culture-specific,10.1093/jxb/ers340,E1,extract_pending,Study reports about 190 under low-light and about 240 under medium-light for blue/white conditions; exact table context and units need full extraction
