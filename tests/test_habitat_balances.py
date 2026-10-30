@@ -26,3 +26,10 @@ def test_inventory_depletion_is_not_silently_clipped():
 def test_invalid_negative_human_rate_rejected():
     with pytest.raises(ValueError):
         HabitatInputs(o2_human_consumption_mmol_day=-1).validate()
+
+def test_fifteen_person_scaling_is_explicit():
+    from pbrbiosphere.habitat import scale_per_person_rate
+    assert scale_per_person_rate(12.5,15)==pytest.approx(187.5)
+def test_occupant_scaling_rejects_invalid_count():
+    from pbrbiosphere.habitat import scale_per_person_rate
+    with pytest.raises(ValueError): scale_per_person_rate(12.5,-1)
