@@ -10,9 +10,10 @@ class ModelParameters:
       mu_max, decay: 1/day
       k_light: umol photons m-2 s-1
       k_n, k_p, k_c: mmol/L
-      q_o2_max: mmol O2 gDW-1 day-1
       respiration: mmol O2 gDW-1 day-1
-      yield_c: mmol C gDW-1 (illustrative conversion)
+      yield_c: mmol C gDW-1 formed
+      photosynthetic_quotient: mmol O2 evolved / mmol C fixed
+      respiratory_quotient: mmol C released / mmol O2 consumed
     """
     mu_max: float = 0.35
     decay: float = 0.01
@@ -20,9 +21,10 @@ class ModelParameters:
     k_n: float = 0.10
     k_p: float = 0.01
     k_c: float = 0.20
-    q_o2_max: float = 8.0
     respiration: float = 0.50
     yield_c: float = 35.0
+    photosynthetic_quotient: float = 1.0
+    respiratory_quotient: float = 1.0
 
 
 @dataclass(frozen=True)
