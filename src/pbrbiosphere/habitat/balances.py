@@ -81,3 +81,9 @@ def simulate_habitat(days, points, initial, inputs):
     a=np.maximum(sol.y,0)
     return pd.DataFrame({"time_days":sol.t,"oxygen_mmol":a[0],"carbon_dioxide_mmol":a[1],
                          "water_l":a[2],"nitrogen_mmol":a[3],"phosphorus_mmol":a[4]})
+
+def scale_per_person_rate(per_person_rate, occupants):
+    """Scale a sourced per-person flux; no default physiological rate is assumed."""
+    if not math.isfinite(per_person_rate): raise ValueError("per_person_rate must be finite")
+    if not isinstance(occupants,int) or occupants<0: raise ValueError("occupants must be an integer >= 0")
+    return per_person_rate*occupants
