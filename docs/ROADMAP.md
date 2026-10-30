@@ -1,9 +1,12 @@
-# Roadmap
-- PBR-01: biological foundations and evidence register; organism-specific parameter extraction remains open.
-- PBR-02: reduced algal physiology and balances implemented; source-fitted parameters and independent biological validation remain open.
-- PBR-03: reduced circadian phase/entrainment and acclimation foundations implemented; fitted PRCs and metabolic coupling remain open.
-- PBR-04: flat-panel geometry, 1-D attenuation, two-phase gas transfer and lumped thermal model implemented; calibration and hydrodynamic validation remain open.
-- PBR-02/PBR-04 integration: first dynamic coupling implemented for biomass-dependent PAR attenuation, dissolved/headspace O2 transfer and liquid temperature. CO2 transfer remains blocked pending validated carbonate chemistry.
-- PBR-05: deterministic supervisory recommendation layer implemented with fail-closed sensor-quality handling and operator confirmation; not a safety controller.
-- PBR-04A: parameter provenance, carbonate-equilibrium prototype, experimental data contract and independent holdout metrics implemented. Medium-specific chemistry, source extraction, parameter fitting and independent experimental validation remain open.
-- PBR-06: crop/human/resource compartments and habitat-level balances, only after component-level parameters and models have independent validation.
+# Roadmap and completion status
+- PBR-01 — biological foundations and evidence register: complete as a literature-scoping deliverable; parameter extraction remains iterative.
+- PBR-02 — reduced algal physiology and inventory balances: software implemented; biological parameter fitting and independent validation open.
+- PBR-03 — reduced circadian phase/entrainment scaffold: software implemented; experimentally fitted PRCs and metabolic coupling open.
+- PBR-04 — flat-panel geometry, 1-D optics, gas transfer and lumped thermal rates: software implemented; physical calibration and hydrodynamic validation open.
+- PBR-02/PBR-04 integration — dynamic coupling for biomass-dependent PAR attenuation, dissolved/headspace O2 transfer and liquid temperature: software implemented; carbonate carbon-transfer coupling blocked pending validated chemistry.
+- PBR-05 — conservative supervisory recommendation layer with fail-closed sensor-quality handling and operator confirmation: software implemented; not a process-safety controller.
+- PBR-04A — parameter provenance, carbonate-equilibrium prototype, experimental data contract and independent holdout metrics: software framework implemented; parameter audit and experimental validation remain active.
+- PBR-06 — lumped habitat O2, CO2, water, N and P inventory accounting: software scaffold implemented. Crop/human physiology, atmosphere, waste/water recovery, 15-person scaling and independent validation are not implemented.
+- Final scientific validation gate — source-level parameter extraction, medium-specific chemistry, parameter identification, blind holdout tests, uncertainty and model-discrepancy analysis. This gate remains open and must precede any claim of regenerative habitat performance.
+
+No milestone currently establishes safe human occupancy, oxygen sufficiency or underwater life-support capability.
