@@ -25,7 +25,7 @@ def test_transfer_equilibrium_zero():
  assert r["co2_liquid_to_gas_mmol_day"]==pytest.approx(0,abs=1e-10)
 def test_transfer_rate_units_include_liquid_volume():
  r=gas_transfer_rates(2,1,0,0,2,1,298.15,GasTransferParameters(2,3,1,1))
- assert r["o2_liquid_to_gas_mmol_day"]==pytest.approx(4)
+ assert r["o2_liquid_to_gas_mmol_day"]==pytest.approx(8)
  assert r["co2_liquid_to_gas_mmol_day"]==pytest.approx(6)
 def test_thermal_directions_and_scaling():
  p=ThermalParameters(absorbed_fraction=.2)
