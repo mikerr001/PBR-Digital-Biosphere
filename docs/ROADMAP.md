@@ -1,11 +1,7 @@
 # Roadmap
-
 - PBR-01: biological foundations and evidence register.
-- PBR-02.1: parameter extraction and provenance.
-- PBR-02.2: photosynthesis, respiration and growth modules.
-- PBR-02.3: explicit elemental balances and gas transfer.
-- PBR-02.4: numerical verification and experimental validation.
-- PBR-03: reduced KaiABC phase/entrainment and separate light-acclimation foundations implemented; evidence-fitted PRCs, acclimation kinetics and metabolic coupling remain validation gates.
-- PBR-04: photobioreactor physics (light attenuation, mixing, temperature, kLa).
+- PBR-02: reduced algal physiology, balances and simulation; biological validation remains open.
+- PBR-03: reduced circadian phase/entrainment and separate light-acclimation foundations; fitted parameters and metabolic coupling remain open.
+- PBR-04: flat-panel geometry, 1-D attenuation, two-phase gas transfer and lumped thermal model implemented; calibration, hydrodynamics and biological coupling remain open.
 - PBR-05: deterministic automation and predictive control.
 - PBR-06: crop/human/resource compartments and habitat-level balances.

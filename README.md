@@ -1,71 +1,40 @@
 # PBR Digital Biosphere
+Research codebase for a mechanistic algal photobioreactor and regenerative-habitat digital twin.
 
-Research codebase for a mechanistic photobioreactor and regenerative-habitat digital twin.
+## Current milestone: PBR-04
+PBR-04 adds flat-panel geometry, depth-resolved Beer–Lambert attenuation, separate dissolved/headspace O₂ and molecular CO₂ exchange, and a lumped thermal balance. The physical modules are executable and tested but are not dynamically coupled to PBR-02 biological production or experimentally validated. See the PBR-04 model specification, implementation status and validation plan.
 
-## Current milestone: PBR-03
-
-PBR-03 adds separate reduced circadian phase/entrainment and light-history acclimation states for *Synechococcus elongatus* PCC 7942. It is not yet biologically parameterised: default phase-response curves are zero, acclimation parameters are provisional, and neither state affects PBR-02 growth or oxygen balances. See `docs/PBR-03_MODEL_SPEC.md` and `docs/PBR-03_VALIDATION_PLAN.md`.
-
-## Previous milestone: PBR-02
-
-PBR-02 implements a reduced, well-mixed algal-culture physiology prototype. It is executable and testable, but **not yet biologically validated**. Default values are software-demo assumptions. Only source-traceable measurements in the evidence register should be used as biological parameters.
-
-### Scientific guardrails
-- Never present simulated values as experimental measurements.
+## Scientific guardrails
+- Simulated values are not experimental measurements.
 - Keep *Synechococcus elongatus* PCC 7942 and *Phaeodactylum tricornutum* evidence separate.
 - Do not transfer KaiABC equations to *P. tricornutum*.
 - Separate gross oxygen evolution from oxygen consumption.
-- Preserve measurement basis: per cell, chlorophyll, protein or dry biomass.
-- The current fixed-quota C/N/P closures are reduced-model assumptions, not a complete reactor elemental inventory.
+- Preserve measurement basis (per cell, chlorophyll, protein or dry biomass).
+- PBR-02 fixed-quota balances are reduced assumptions, not a complete reactor inventory.
 - This software is not a human life-support controller or safety-certified design tool.
 
-## Run locally or in a cloud notebook
-
-Python 3.10, 3.11 or 3.12:
-
+## Install and test
 ```bash
 python -m venv .venv
-source .venv/bin/activate  # Windows: .venv\\Scripts\\activate
+source .venv/bin/activate
 pip install -e ".[dev]"
 pytest -q
 python -m pbrbiosphere
 ```
-
-The CLI writes a baseline CSV, five scenario CSVs and plots under `results/`.
+Python 3.10–3.12 are supported.
 
 ## Implemented
-- Monod light, DIC and nutrient response.
-- Platt P-I relative-response utility.
-- Separate respiration and gross oxygen conversion utilities.
-- Reduced fixed-quota biomass/DIC/N/P balances.
-- RK45 integration segmented at light-dark transitions.
-- Scenario runner and validation metrics (MAE, RMSE, R²).
-- Source metadata for the first *S. elongatus* PCC 7942 observations.
-- GitHub Actions test matrix for Python 3.10–3.12, with unique SHA-labelled runs and superseded-run cancellation.
+- PBR-02 reduced biomass, DIC, O₂, N and P culture model.
+- PBR-03 reduced KaiABC phase/entrainment scaffold and independent acclimation state.
+- PBR-04 flat-panel geometry, 1-D optics, two-phase gas transfer and lumped thermal rate models.
+- GitHub Actions verification matrix for Python 3.10–3.12.
 
-## Not yet implemented
-- Fitted organism-specific Platt parameters and direct gross photosynthesis model.
-- Validated temperature response and dynamic photoacclimation.
-- DIC carbonate chemistry, pH and alkalinity.
-- Gas headspace and gas-liquid mass transfer.
-- Variable biomass elemental composition and dissolved organic pools.
-- Independent biological validation.
-- Circadian regulation (PBR-03), spatial PBR physics (PBR-04), controls (PBR-05) and habitat modules (PBR-06).
+## Remaining
+- Evidence-fitted biology and independent validation.
+- Carbonate chemistry, pH and alkalinity.
+- CFD/hydrodynamics and experimentally measured mixing.
+- Dynamic PBR-02/PBR-04 coupling and spatial photosynthesis.
+- PBR-05 predictive control and PBR-06 habitat resource balances.
 
-## Evidence and model documentation
-- `docs/PBR-02_MODEL_SPEC.md`
-- `docs/PBR-02_INITIAL_EVIDENCE_REVIEW.md`
-- `docs/PBR-02_VALIDATION_PROTOCOL.md`
-- `docs/PBR-02_IMPLEMENTATION_STATUS.md`
-- `data/parameter_register.csv`
-
-## Safety boundary
-This research simulator must not be used to size, operate or certify human oxygen supply, underwater habitats, pressure vessels or life-support systems.
-
-
-### PBR-03 circadian module
-- Reduced phase oscillator with separate light-on/light-off empirical PRC tables.
-- Free-running, regular, shifted and irregular-light experiments.
-- Morning-output proxy for analysis only; no unvalidated growth/O2 multiplier.
-- Independent bounded light-acclimation state with directional time constants; not yet fitted to a measured trait.
-- KaiABC equations are not assigned to *Phaeodactylum tricornutum*.
+## Safety
+Research simulator only. Do not use it to size, operate or certify human oxygen supply, underwater habitats or pressure vessels.
