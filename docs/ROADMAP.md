@@ -5,7 +5,7 @@
 - PBR-02.2: photosynthesis, respiration and growth modules.
 - PBR-02.3: explicit elemental balances and gas transfer.
 - PBR-02.4: numerical verification and experimental validation.
-- PBR-03: organism-specific circadian regulation (KaiABC for *S. elongatus* only).
+- PBR-03: reduced KaiABC phase/entrainment and separate light-acclimation foundations implemented; evidence-fitted PRCs, acclimation kinetics and metabolic coupling remain validation gates.
 - PBR-04: photobioreactor physics (light attenuation, mixing, temperature, kLa).
 - PBR-05: deterministic automation and predictive control.
 - PBR-06: crop/human/resource compartments and habitat-level balances.
