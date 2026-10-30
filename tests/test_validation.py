@@ -26,8 +26,8 @@ from pbrbiosphere.validation.compare import compare_csv
 def test_compare_csv_uses_exact_matching_time_grid(tmp_path):
     observed = tmp_path / "observed.csv"
     predicted = tmp_path / "predicted.csv"
-    observed.write_text("time_days,biomass_gDW_L\\n0,1\\n1,2\\n", encoding="utf-8")
-    predicted.write_text("time_days,biomass_gDW_L\\n0,1.1\\n1,1.9\\n", encoding="utf-8")
+    observed.write_text("time_days,biomass_gDW_L\n0,1\n1,2\n", encoding="utf-8")
+    predicted.write_text("time_days,biomass_gDW_L\n0,1.1\n1,1.9\n", encoding="utf-8")
     result = compare_csv(str(observed), "biomass_gDW_L",
                          str(predicted), "biomass_gDW_L")
     assert result["n"] == 2
@@ -37,7 +37,7 @@ def test_compare_csv_uses_exact_matching_time_grid(tmp_path):
 def test_compare_csv_rejects_misaligned_times(tmp_path):
     observed = tmp_path / "observed.csv"
     predicted = tmp_path / "predicted.csv"
-    observed.write_text("time_days,value\\n0,1\\n1,2\\n", encoding="utf-8")
-    predicted.write_text("time_days,value\\n0,1\\n2,2\\n", encoding="utf-8")
+    observed.write_text("time_days,value\n0,1\n1,2\n", encoding="utf-8")
+    predicted.write_text("time_days,value\n0,1\n2,2\n", encoding="utf-8")
     with pytest.raises(ValueError):
         compare_csv(str(observed), "value", str(predicted), "value")
