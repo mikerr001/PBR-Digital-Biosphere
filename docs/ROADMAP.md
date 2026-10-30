@@ -1,7 +1,8 @@
 # Roadmap
-- PBR-01: biological foundations and evidence register.
-- PBR-02: reduced algal physiology, balances and simulation; biological validation remains open.
-- PBR-03: reduced circadian phase/entrainment and separate light-acclimation foundations; fitted parameters and metabolic coupling remain open.
-- PBR-04: flat-panel geometry, 1-D attenuation, two-phase gas transfer and lumped thermal model implemented; calibration, hydrodynamics and biological coupling remain open.
-- PBR-05: deterministic automation and predictive control.
-- PBR-06: crop/human/resource compartments and habitat-level balances.
+- PBR-01: biological foundations and evidence register; organism-specific parameter extraction remains open.
+- PBR-02: reduced algal physiology and balances implemented; source-fitted parameters and independent biological validation remain open.
+- PBR-03: reduced circadian phase/entrainment and acclimation foundations implemented; fitted PRCs and metabolic coupling remain open.
+- PBR-04: flat-panel geometry, 1-D attenuation, two-phase gas transfer and lumped thermal model implemented; calibration and hydrodynamic validation remain open.
+- PBR-02/PBR-04 integration: first dynamic coupling implemented for biomass-dependent PAR attenuation, dissolved/headspace O2 transfer and liquid temperature. CO2 gas transfer is deliberately blocked pending carbonate speciation; independent experimental validation remains open.
+- PBR-05: defer predictive/automated control until PBR-02/PBR-04 parameter identification, independent validation and model-discrepancy bounds are established.
+- PBR-06: crop/human/resource compartments and habitat-level balances, after component-level balances are validated.
