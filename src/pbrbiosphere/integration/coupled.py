@@ -27,8 +27,8 @@ class CoupledInitialState:
         self.biology.validate()
         if not math.isfinite(self.headspace_oxygen_mmol) or self.headspace_oxygen_mmol < 0:
             raise ValueError("headspace_oxygen_mmol must be finite and >= 0")
-        if not math.isfinite(self.temperature_c):
-            raise ValueError("temperature_c must be finite")
+        if not math.isfinite(self.temperature_c) or self.temperature_c <= -273.15:
+            raise ValueError("temperature_c must be finite and above absolute zero")
 
 def run_coupled_simulation(days: float, points: int, geometry: FlatPanelGeometry,
     gas: GasTransferParameters, thermal: ThermalParameters,
@@ -51,8 +51,8 @@ def run_coupled_simulation(days: float, points: int, geometry: FlatPanelGeometry
     for name, value, minimum in checks:
         if not math.isfinite(value) or value < minimum:
             raise ValueError(f"{name} must be finite and >= {minimum}")
-    if not math.isfinite(ambient_temperature_c):
-        raise ValueError("ambient_temperature_c must be finite")
+    if not math.isfinite(ambient_temperature_c) or ambient_temperature_c <= -273.15:
+        raise ValueError("ambient_temperature_c must be finite and above absolute zero")
     p, s, env = params or ModelParameters(), initial or CoupledInitialState(), environment or Environment()
     p.validate(); s.validate(); env.validate(); geometry.validate(); gas.validate(); thermal.validate()
     if geometry.volume_closure_relative_error > geometry_tolerance:
@@ -67,6 +67,8 @@ def run_coupled_simulation(days: float, points: int, geometry: FlatPanelGeometry
         x, dic, o2l, n, phos, o2g, temp = map(float, y)
         if min(x, dic, o2l, n, phos, o2g) < -1e-7:
             raise ValueError("coupled state contains a materially negative inventory")
+        if temp <= -273.15:
+            raise ValueError("integrated temperature reached absolute zero")
         x, dic, o2l, n, phos, o2g = [max(0.0, v) for v in (x, dic, o2l, n, phos, o2g)]
         hour = (t * 24.0) % env.day_hours
         incident_par = env.irradiance if hour < env.photoperiod_hours else 0.0
