@@ -21,7 +21,7 @@ dT/dt = (Q_solar+Q_metabolic-Q_loss)/(rho V_L c_p).
 Solar heat is incident irradiance × illuminated area × absorbed fraction; heat loss is UA(T-T_ambient). W is converted to J/day, yielding K/day. Wall thermal mass, evaporation, latent heat, active cooling and spatial gradients are omitted.
 
 ## Mixing and coupling
-No CFD, bubble hydrodynamics, circulation or mixing-time dynamics are implemented. The assembly output explicitly marks mixing dynamics unavailable. PBR-04 does not calculate photosynthesis, biomass growth, oxygen production or carbon fixation. It is not yet connected to PBR-02. Path-average irradiance must not be treated as a validated replacement for the existing PBR-02 light forcing.
+A two-compartment exchange helper accepts a measured mixing-time constant and returns signed exchange between equal-volume compartments. It is not integrated into a time-dependent spatial reactor state. CFD, bubble hydrodynamics and circulation remain unimplemented. PBR-04 does not calculate photosynthesis, biomass growth, oxygen production or carbon fixation. It is not yet connected to PBR-02. Path-average irradiance must not be treated as a validated replacement for the existing PBR-02 light forcing.
 
 ## Parameter status
 The software has no asserted reactor-specific default for attenuation, kLa, Henry constants, heat absorption or UA. Unit-test values are synthetic and verify equations, signs and conversions only.

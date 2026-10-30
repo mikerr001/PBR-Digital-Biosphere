@@ -26,7 +26,7 @@ Python 3.10–3.12 are supported.
 ## Implemented
 - PBR-02 reduced biomass, DIC, O₂, N and P culture model.
 - PBR-03 reduced KaiABC phase/entrainment scaffold and independent acclimation state.
-- PBR-04 flat-panel geometry, 1-D optics, two-phase gas transfer and lumped thermal rate models.
+- PBR-04 flat-panel geometry, 1-D optics, two-phase gas transfer, lumped thermal rates and a measured-time-constant two-compartment exchange helper.
 - GitHub Actions verification matrix for Python 3.10–3.12.
 
 ## Remaining
