@@ -19,5 +19,5 @@ def compare_independent_dataset(predicted,observed,time_column,value_column,unce
         s=m[uncertainty_column].to_numpy(float)
         if not np.isfinite(s).all() or np.any(s<=0): raise ValueError("uncertainties must be finite and > 0")
         out["mean_absolute_normalized_error"]=float(np.mean(np.abs(e)/s))
-        out["within_1sigma_fraction"]=float(np.mean(np.abs(e)<=s))
+        out["within_1sigma_fraction"]=float(np.mean(np.abs(e)<=s + 1e-12*np.maximum(1.0,s)))
     return out
