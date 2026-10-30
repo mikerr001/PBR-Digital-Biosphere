@@ -19,6 +19,48 @@ PBR-02 stores total dissolved inorganic carbon (DIC); PBR-04 Henry-law transfer 
 - PBR-04A carbonate speciation prototype, parameter provenance audit, data schema and independent holdout metrics.
 - PBR-06 lumped habitat O2, CO2, water, nitrogen and phosphorus inventories with explicit external flux inputs.
 
+## Run the simulator
+
+The quickest route is to clone/download this repository and run the PBR-02 command-line demo. Use Python 3.10–3.12.
+
+```bash
+git clone https://github.com/mikerr001/PBR-Digital-Biosphere.git
+cd PBR-Digital-Biosphere
+python -m venv .venv
+# macOS/Linux:
+source .venv/bin/activate
+# Windows PowerShell: .venv\\Scripts\\Activate.ps1
+python -m pip install --upgrade pip
+pip install -e ".[dev]"
+pytest -q
+python -m pbrbiosphere
+```
+
+The command writes `results/baseline_simulation.csv`, five scenario CSVs under `results/scenarios/`, and biomass, dissolved-oxygen and DIC plots under `results/figures/`. The default run is a five-day illustrative PBR-02 run. Its default parameter values are not validated biological measurements.
+
+To change duration, initial conditions, parameters or environment, use the Python API. For example:
+
+```python
+from pbrbiosphere.config import Environment, InitialState, ModelParameters
+from pbrbiosphere.simulate import run_simulation, save_results
+from pbrbiosphere.plots import plot_results
+
+params = ModelParameters()  # replace with sourced, condition-matched values
+initial = InitialState(biomass=0.10, dic=2.0, oxygen=0.20,
+                       nitrogen=1.0, phosphorus=0.10)
+environment = Environment(temperature_c=25.0, irradiance=100.0,
+                          photoperiod_hours=12.0, day_hours=24.0)
+results = run_simulation(days=10, points=1001, params=params,
+                         initial=initial, environment=environment)
+save_results(results, "my_results")
+plot_results(results, "my_results/figures")
+print(results.tail())
+```
+
+For named light-schedule comparisons, use `run_standard_scenarios()` from `pbrbiosphere.scenarios`. For exploratory one-at-a-time sensitivity screening, use `one_at_a_time()` from `pbrbiosphere.sensitivity`. See `docs/SIMULATOR_USER_GUIDE.md` for the coupled reactor, carbonate, circadian, controller and habitat interfaces and their current limits.
+
+**Scope warning:** `python -m pbrbiosphere` currently runs PBR-02 only. It does not automatically run the coupled PBR-02/PBR-04 reactor, PBR-03 circadian model, PBR-05 supervisor or PBR-06 habitat ledger. Those are separate Python interfaces, documented in the user guide. Never use this research simulator to design or operate human life-support equipment.
+
 ## Scientific guardrails
 - Simulated values are not experimental measurements.
 - Keep *Synechococcus elongatus* PCC 7942 and *Phaeodactylum tricornutum* evidence separate.
