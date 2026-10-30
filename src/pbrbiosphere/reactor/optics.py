@@ -18,6 +18,6 @@ def calculate_light_field(surface_irradiance_umol_m2_s,optical_path_m,biomass_gd
     z=np.linspace(0,optical_path_m,cells)
     k=biomass_attenuation_m2_kgdw*biomass_gdw_l+background_attenuation_m
     light=surface_irradiance_umol_m2_s*np.exp(-k*z)
-    avg=float(np.trapz(light,z)/optical_path_m)
+    avg=float(np.sum(0.5*(light[:-1]+light[1:])*np.diff(z))/optical_path_m)
     trans=float(light[-1]/surface_irradiance_umol_m2_s) if surface_irradiance_umol_m2_s>0 else math.exp(-k*optical_path_m)
     return LightField(z,light,avg,trans)
