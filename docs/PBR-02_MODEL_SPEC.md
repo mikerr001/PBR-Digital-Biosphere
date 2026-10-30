@@ -1,74 +1,72 @@
-# PBR-02 Model Specification v0.1
+# PBR-02 Model Specification v0.2
 
 ## Purpose
-Build a reproducible, evidence-traceable model of a single well-mixed algal culture. This is a research model, not a life-support design.
+Build a reproducible, evidence-traceable model of a single well-mixed algal culture. This is research software, not a life-support design.
 
 ## Organism configurations
 1. Primary clock research organism: *Synechococcus elongatus* PCC 7942 (cyanobacterium).
 2. Marine comparison: *Phaeodactylum tricornutum* (diatom).
 
-Their parameters and biological mechanisms remain separate. The KaiABC oscillator belongs only in the *Synechococcus* configuration unless direct evidence supports another organism's clock mechanism.
+Keep parameters and biological mechanisms separate. The KaiABC oscillator is specific to the *Synechococcus* research configuration unless direct evidence establishes a corresponding mechanism elsewhere.
 
 ## State vector
 - X: biomass concentration, g dry weight L-1.
-- C: dissolved inorganic carbon, mmol C L-1.
+- C: dissolved inorganic carbon, mmol C L-1 (currently a single lumped pool).
 - O: dissolved oxygen, mmol O2 L-1.
 - N: available nitrogen, mmol N L-1.
 - P: available phosphorus, mmol P L-1.
 
-## Initial equations
-Light saturation:
-fI = I / (KI + I)
+## Reduced equations
+Light saturation: fI = I / (KI + I)
 
 Monod nutrient limitation:
-fN = N / (KN + N); fP = P / (KP + P)
-
-DIC limitation (temporary simplification):
-fC = C / (KC + C)
+fN = N / (KN + N); fP = P / (KP + P); fC = C / (KC + C)
 
 Growth:
 mu = mu_max * fI * min(fN, fP) * fC * fT
 dX/dt = (mu - rd) X
 
-Carbon and oxygen:
-Rfix = mu X Y_C
-Rresp = m_O2 X
-dC/dt = -Rfix + Rresp,C
-dO/dt = P_O2,gross - R_O2,resp
+Carbon and oxygen rates:
+C_fixed = mu X Y_C
+O_consumed = m_O2 X
+C_respired = RQ * O_consumed
+O_gross = PQ * C_fixed
 
-In the starter implementation, carbon respiration is provisionally set equal to oxygen respiration using a one-to-one molar assumption. This is not generally valid and must be replaced by a measured respiratory quotient and explicit carbon/oxygen stoichiometry.
+dC/dt = -C_fixed + C_respired
+dO/dt = O_gross - O_consumed
+
+RQ is the respiratory quotient (mol CO2 released / mol O2 consumed). PQ is the photosynthetic quotient (mol O2 evolved / mol inorganic carbon fixed). Neither is universal; both depend on organism, substrate and conditions and must be sourced or measured. Starter defaults of 1.0 are software placeholders only.
 
 Nutrient uptake:
 dN/dt = -qN mu X
 dP/dt = -qP mu X
 
-## Critical model limitations
-- The current code uses illustrative defaults solely to test software plumbing. They are not organism-specific measured parameters.
+## Critical limitations
+- Starter defaults are illustrative software-test values, not measured organism-specific parameters.
 - Temperature response is a neutral placeholder (factor 1), not a validated thermal response.
-- DIC is represented as one pool; pH, alkalinity, bicarbonate/carbonate speciation and CO2 hydration are absent.
-- The provisional 1:1 carbon fixation-to-oxygen ratio is not a universal biological law.
-- No gas phase or gas-liquid transfer is implemented.
-- No photoinhibition, acclimation, spatial light attenuation, mixing, thermal balance or cell-cycle/clock module.
-- Nutrient uptake stoichiometry is illustrative.
-- The model does not yet conserve a fully closed elemental inventory because carbon/oxygen stoichiometry is provisional and biomass elemental composition is simplified.
+- DIC is one lumped pool; pH, alkalinity, bicarbonate/carbonate speciation and CO2 hydration are absent.
+- Fixed biomass elemental quotas and constant PQ/RQ are placeholders requiring measured data.
+- No gas headspace or gas-liquid transfer.
+- No photoinhibition, acclimation, spatial light attenuation, mixing, thermal balance or clock module.
+- No external validation has yet been completed.
+- The simplified model is not a closed elemental inventory: biomass elemental pools and all relevant dissolved/gas pools are not yet represented explicitly.
 
 ## Development sequence
-1. Replace placeholder parameter values with traceable experimental data.
-2. Implement gross photosynthesis and respiration as separately parameterised rates.
-3. Implement explicit biomass C/N/P composition and elemental balances.
-4. Add DIC carbonate chemistry and pH/alkalinity state.
+1. Replace placeholder values with traceable experimental data and uncertainty.
+2. Add organism-specific gross photosynthesis and respiration response functions.
+3. Represent biomass C/N/P composition and elemental inventories explicitly.
+4. Add DIC carbonate chemistry, pH and alkalinity.
 5. Add gas headspace and kLa transfer terms with equal-and-opposite phase fluxes.
-6. Fit and validate against independent experiments.
-7. Only then add acclimation and circadian regulation.
+6. Verify mass conservation and validate against independent experiments.
+7. Add acclimation and circadian regulation only after baseline validation.
 
 ## Validation gates
-- Units/dimensional consistency.
-- Non-negative state handling without silently hiding material solver errors.
+- Dimensional consistency.
 - Zero biomass gives zero biomass-dependent rates.
 - Zero light gives zero light-driven gross photosynthesis.
-- Carbon, oxygen, nitrogen and phosphorus inventories close within numerical tolerance after all relevant pools are represented.
-- Parameter and validation datasets are separated.
-- Report MAE/RMSE and residual plots against independent experimental observations.
+- Carbon, oxygen, nitrogen and phosphorus inventories close after all relevant pools are represented.
+- Separate calibration and validation datasets.
+- Report MAE/RMSE, residual plots and uncertainty against independent observations.
 
 ## Safety boundary
 Do not use this software to size, operate or certify human oxygen supply, underwater habitats, pressure vessels or life-support systems.
