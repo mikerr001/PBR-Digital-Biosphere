@@ -1,9 +1,9 @@
 """Evidence-provenance validation for parameter-register rows."""
 from math import isfinite
-ALLOWED_CLASSES={"measured","literature_derived","fitted","estimated","unknown"}
+ALLOWED_CLASSES={"measured","literature_derived","fitted","estimated","unknown","E1"}
 REQUIRED=("parameter_id","organism","strain","parameter","unit","evidence_class","status","source_doi","notes")
 def validate_parameter_record(record):
-    """Return audit findings; does not determine biological validity."""
+    """Return audit findings; E1 is accepted as the legacy evidence-tier code."""
     issues=[]
     for key in REQUIRED:
         if not str(record.get(key,"")).strip(): issues.append(f"missing:{key}")
