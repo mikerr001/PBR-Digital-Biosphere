@@ -2,6 +2,7 @@ import numpy as np
 import pytest
 from pbrbiosphere.config import InitialState, ModelParameters, Environment
 from pbrbiosphere.simulate import run_simulation
+from pbrbiosphere.model import rhs
 
 
 def test_simulation_returns_finite_nonnegative_states():
@@ -16,6 +17,15 @@ def test_zero_biomass_has_no_biomass_dependent_fluxes():
     df = run_simulation(days=1, points=11, initial=initial)
     assert np.allclose(df["biomass_gDW_L"], 0.0)
     assert np.allclose(df["oxygen_mmol_L"], initial.oxygen)
+
+
+def test_zero_light_has_no_gross_oxygen_evolution():
+    p = ModelParameters()
+    env = Environment(irradiance=0.0)
+    state = np.array([0.1, 2.0, 0.2, 1.0, 0.1])
+    derivative = rhs(0.0, state, p, env)
+    expected_respiration = p.respiration * state[0]
+    assert derivative[2] == pytest.approx(-expected_respiration)
 
 
 def test_zero_light_has_no_growth_when_decay_is_zero():
