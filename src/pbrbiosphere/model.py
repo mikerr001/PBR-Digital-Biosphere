@@ -28,7 +28,8 @@ def rhs(t: float, y: np.ndarray, p: ModelParameters, env: Environment) -> np.nda
     o2_resp = oxygen_consumption(x, p.respiration)
     c_resp = o2_resp * p.respiratory_quotient
     c_biomass_net = p.q_c * d_x
-    c_gross_fix = max(0.0, c_biomass_net + c_resp)
+    # Enforce the physical dark limit: no light-driven gross photosynthesis at I=0.
+    c_gross_fix = 0.0 if light <= 0.0 else max(0.0, c_biomass_net + c_resp)
     o2_gross = gross_oxygen_from_carbon(c_gross_fix, p.photosynthetic_quotient)
 
     # The reduced carbon pool closes exactly with the fixed biomass carbon quota:
