@@ -79,16 +79,22 @@ class SpatialReactorResult:
     metadata: dict
 
 
-def _transport(field, velocity, dispersion, dx):
-    """Conservative upwind advection plus central axial dispersion."""
+def _transport(field, velocity, dispersion, dx, inlet_value):
+    """Finite-volume upwind advection and central dispersion.
+
+    Positive-flow Danckwerts inlet concentration; zero-gradient convective
+    outlet. Face fluxes are shared by adjacent cells, preserving internal
+    conservation. The inlet diffusive gradient uses a half-cell distance.
+    """
+    if velocity < 0:
+        raise ValueError("negative flow is not supported by this inlet convention")
     n = field.size
     flux = np.zeros(n + 1)
-    if velocity >= 0:
-        flux[1:n] = velocity * field[:-1]
-        flux[n] = velocity * field[-1]
-    else:
-        flux[1:n] = velocity * field[1:]
-        flux[0] = velocity * field[0]
+    flux[0] = velocity * inlet_value
+    if dispersion > 0:
+        flux[0] -= dispersion * (field[0] - inlet_value) / (0.5 * dx)
+    flux[1:n] = velocity * field[:-1]
+    flux[n] = velocity * field[-1]
     flux[1:n] -= dispersion * (field[1:] - field[:-1]) / dx
     return -(flux[1:] - flux[:-1]) / dx
 
@@ -150,17 +156,13 @@ def simulate_spatial_reactor(duration_s, output_points, config=None, initial=Non
                      * (cfg.coolant_temperature_k - temp)
                      / cfg.volumetric_heat_capacity_j_m3_k)
         derivs = [
-            _transport(biomass, velocity, cfg.axial_dispersion_m2_s, dx) + net_growth_s,
-            _transport(dic, velocity, cfg.axial_dispersion_m2_s, dx) + dic_rxn,
-            _transport(oxygen, velocity, cfg.axial_dispersion_m2_s, dx) + o2_rxn + o2_transfer,
-            _transport(nitrogen, velocity, cfg.axial_dispersion_m2_s, dx) + n_rxn,
-            _transport(phosphorus, velocity, cfg.axial_dispersion_m2_s, dx) + p_rxn,
-            _transport(temp, velocity, cfg.thermal_diffusivity_m2_s, dx) + wall_heat,
+            _transport(biomass, velocity, cfg.axial_dispersion_m2_s, dx, feed_values[0]) + net_growth_s,
+            _transport(dic, velocity, cfg.axial_dispersion_m2_s, dx, feed_values[1]) + dic_rxn,
+            _transport(oxygen, velocity, cfg.axial_dispersion_m2_s, dx, feed_values[2]) + o2_rxn + o2_transfer,
+            _transport(nitrogen, velocity, cfg.axial_dispersion_m2_s, dx, feed_values[3]) + n_rxn,
+            _transport(phosphorus, velocity, cfg.axial_dispersion_m2_s, dx, feed_values[4]) + p_rxn,
+            _transport(temp, velocity, cfg.thermal_diffusivity_m2_s, dx, feed_values[5]) + wall_heat,
         ]
-        if velocity > 0:
-            tau = dx / velocity
-            for k, field in enumerate(fields):
-                derivs[k][0] += (feed_values[k] - field[0]) / max(tau, 1e-9)
         return np.concatenate(derivs)
 
     times = np.linspace(0, duration_s, output_points)
