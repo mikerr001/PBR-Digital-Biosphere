@@ -21,7 +21,7 @@ package PBRPlant
                    - pumpCurveCoefficient*flow*flow;
     pipePressure = pipeLinearResistance*flow
                    + pipeQuadraticResistance*flow*abs(flow);
-    pumpPressure = pipePressure + rho*g*level*0;
+    pumpPressure = pipePressure;
     volume = vesselArea*level;
     der(level) = (flow-outletFlow)/vesselArea;
     annotation(Documentation(info="
