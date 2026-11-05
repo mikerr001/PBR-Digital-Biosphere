@@ -9,14 +9,7 @@ from __future__ import annotations
 import argparse
 import json
 from pathlib import Path
-
-
-def classify_surface_bbox(bbox, selector, tolerance):
-    """Return True when a surface lies on the requested coordinate plane."""
-    axis = {"x": 0, "y": 1, "z": 2}[selector["axis"]]
-    lo, hi = bbox[axis], bbox[axis + 3]
-    coordinate = float(selector["coordinate_m"])
-    return abs(lo - coordinate) <= tolerance and abs(hi - coordinate) <= tolerance
+from pbrbiosphere.mesh_selectors import classify_surface_bbox
 
 
 def main(argv=None):
