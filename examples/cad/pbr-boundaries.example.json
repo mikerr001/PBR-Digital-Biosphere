@@ -1,0 +1,9 @@
+{
+  "fluid_region": "culture_fluid",
+  "surface_groups": [
+    {"name": "inlet", "plane": {"axis": "x", "coordinate_m": 0.0}},
+    {"name": "outlet", "plane": {"axis": "x", "coordinate_m": 1.0}},
+    {"name": "bottom", "plane": {"axis": "z", "coordinate_m": 0.0}},
+    {"name": "top", "plane": {"axis": "z", "coordinate_m": 0.2}}
+  ]
+}

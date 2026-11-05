@@ -1,0 +1,30 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "PBR simulation run manifest",
+  "type": "object",
+  "required": ["schema_version", "run_id", "model", "geometry", "numerics", "initial_conditions", "boundary_conditions", "provenance"],
+  "properties": {
+    "schema_version": {"const": "1.0.0"},
+    "run_id": {"type": "string", "minLength": 1},
+    "model": {"type": "object", "required": ["id", "version", "fidelity_tier", "validation_status"], "properties": {
+      "id": {"type": "string"}, "version": {"type": "string"},
+      "fidelity_tier": {"type": "integer", "minimum": 0, "maximum": 4},
+      "validation_status": {"enum": ["UNVALIDATED", "BENCHMARKED", "EXPERIMENTALLY_VALIDATED", "INVALID"]}
+    }, "additionalProperties": true},
+    "geometry": {"type": "object", "required": ["source", "units"], "properties": {
+      "source": {"type": "string"}, "sha256": {"type": "string", "pattern": "^[a-fA-F0-9]{64}$"},
+      "units": {"const": "m"}, "mesh": {"type": ["object", "null"]}
+    }},
+    "numerics": {"type": "object", "required": ["method", "time_step_s", "tolerance"], "properties": {
+      "method": {"type": "string"}, "time_step_s": {"type": "number", "exclusiveMinimum": 0},
+      "tolerance": {"type": "number", "exclusiveMinimum": 0}, "mesh_cells": {"type": "integer", "minimum": 1},
+      "converged": {"type": "boolean"}, "residuals": {"type": "object"}, "conservation_errors": {"type": "object"}
+    }},
+    "initial_conditions": {"type": "object"}, "boundary_conditions": {"type": "object"},
+    "provenance": {"type": "object", "required": ["parameter_register_revision"], "properties": {
+      "parameter_register_revision": {"type": "string"}, "datasets": {"type": "array", "items": {"type": "string"}},
+      "operator_notes": {"type": "string"}
+    }}
+  },
+  "additionalProperties": false
+}
