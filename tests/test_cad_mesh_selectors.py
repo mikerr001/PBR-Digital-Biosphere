@@ -1,4 +1,4 @@
-from scripts.generate_cad_mesh import classify_surface_bbox
+from pbrbiosphere.mesh_selectors import classify_surface_bbox
 
 
 def test_planar_selector_matches_exact_plane():
