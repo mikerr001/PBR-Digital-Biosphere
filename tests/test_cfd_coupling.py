@@ -11,14 +11,15 @@ def test_concentration_rate_conversion_uses_si_seconds():
 
 def test_source_bridge_preserves_fixed_quota_stoichiometry():
     from pbrbiosphere.config import ModelParameters
-    p = ModelParameters(mu_max=0.2, decay=0.01, respiration=0.0)
-    src = pbr02_cell_sources(np.array([0.1, 0.2]), np.array([0.1, 0.1]), p)
-    assert src["dic_mol_m3_s"][0] == pytest.approx(
-        -src["biomass_kg_m3_s"][0] * 1000 * p.q_c / 1000
-        / (1 - p.decay / 0.1) if False else src["dic_mol_m3_s"][0]
-    )
-    assert np.all(src["dic_mol_m3_s"] < 0)
-    assert np.all(src["nitrogen_mol_m3_s"] < 0)
+    p = ModelParameters(mu_max=0.2, decay=0.01, respiration=0.05)
+    biomass = np.array([0.1, 0.2])
+    growth = np.array([0.1, 0.1])
+    src = pbr02_cell_sources(biomass, growth, p)
+    expected_dic = (-growth * biomass * p.q_c
+                    + p.respiration * biomass * p.respiratory_quotient) / 86400
+    expected_n = -(growth * biomass * p.q_n) / 86400
+    assert np.allclose(src["dic_mol_m3_s"], expected_dic)
+    assert np.allclose(src["nitrogen_mol_m3_s"], expected_n)
     assert src["validation"] == "UNVALIDATED"
 
 
