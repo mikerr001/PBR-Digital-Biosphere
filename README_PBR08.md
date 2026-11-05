@@ -61,6 +61,36 @@ hash of the field archive.
   gates.
 - `docs/SIMULATION_RUN_MANIFEST.schema.json`: machine-readable run schema.
 
+## Optional CAD-to-CFD mesh hand-off
+
+Install the optional meshing dependency:
+
+```bash
+python -m pip install -e ".[cfd]"
+```
+
+Export a single watertight fluid-domain STEP from ToubkalCAD, then create a
+boundary manifest based on the actual CAD dimensions and face locations:
+
+```bash
+python scripts/generate_cad_mesh.py --step fluid-domain.step --manifest examples/cad/pbr-boundaries.example.json --output fluid.msh --mesh-size-m 0.01
+gmshToFoam fluid.msh
+checkMesh -allTopology -allGeometry
+```
+
+The example manifest is only a template. Replace its plane coordinates and
+boundary groups; curved or ambiguous faces require explicit CAD face labels.
+The script rejects overlapping or unassigned surfaces. A generated mesh is
+not automatically a validated mesh.
+
+The local source-term contract is available through
+`pbrbiosphere.cfd_coupling.pbr02_cell_sources`. It emits SI volumetric source
+densities and `integrate_source` checks volume-weighted totals. This is an
+interface foundation, not a live OpenFOAM field exchange or coupled solver.
+
+See `docs/CAD_TO_CFD_PIPELINE.md`, `docs/CFD_CASE_EXECUTION.md` and
+`docs/CFD_BIOLOGY_COUPLING.md` before attempting a CFD run.
+
 ## Fidelity and limitations
 
 The Python distributed reactor is Tier 2 (one-dimensional), UNVALIDATED.
