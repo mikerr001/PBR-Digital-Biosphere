@@ -37,3 +37,23 @@ def test_invalid_mesh_size_rejected():
 def test_zero_duration_rejected():
     with pytest.raises(ValueError, match="duration"):
         simulate_spatial_reactor(0, 2)
+
+
+def test_uniform_state_is_preserved_by_flow_with_matching_feed():
+    from pbrbiosphere.config import ModelParameters
+    state = SpatialInitialState(
+        biomass_g_l=0.1, dic_mmol_l=2.0, oxygen_mmol_l=0.2,
+        nitrogen_mmol_l=1.0, phosphorus_mmol_l=0.1,
+    )
+    p = ModelParameters(mu_max=1e-12, decay=0, respiration=0)
+    result = simulate_spatial_reactor(
+        120, 4,
+        SpatialReactorConfig(cells=6, flow_m3_s=1e-5,
+                             axial_dispersion_m2_s=1e-5,
+                             incident_par_umol_m2_s=0),
+        initial=state, inlet=state, parameters=p,
+    )
+    assert result.success
+    assert np.max(np.abs(result.biomass_g_l - state.biomass_g_l)) < 1e-8
+    assert np.max(np.abs(result.dic_mmol_l - state.dic_mmol_l)) < 1e-8
+    assert np.max(np.abs(result.oxygen_mmol_l - state.oxygen_mmol_l)) < 1e-8
