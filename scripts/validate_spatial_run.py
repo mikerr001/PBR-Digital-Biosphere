@@ -4,7 +4,7 @@ from __future__ import annotations
 import argparse
 import json
 from pathlib import Path
-from pbrbiosphere.validation import validate_run, compare_spatial_runs
+from pbrbiosphere.spatial_validation import validate_run, compare_spatial_runs
 
 
 def main(argv=None):
