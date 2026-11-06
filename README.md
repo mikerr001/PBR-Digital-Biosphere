@@ -91,3 +91,16 @@ Python 3.10–3.12 are supported.
 
 ## Safety
 Research simulator only. Do not use it to size, operate or certify human oxygen supply, underwater habitats, breathable atmospheres or pressure vessels.
+
+
+## Windows desktop workstation
+
+For a local desktop interface, follow [the Windows workstation guide](docs/WINDOWS_WORKSTATION.md). After installing the project with `pip install -e ".[dev]"`, double-click `start_simulator.bat` to open the spatial reactor GUI, or run `python -m pbrbiosphere.desktop_app`. For the automated test + simulation + integrity-check + plotting workflow, run `run_windows_demo.bat`. The GUI and scripts use the Tier-2 1-D model and illustrative parameters; see the guide for fidelity limits.
+
+## Multi-organism model readiness
+
+The organism selector is a catalogue with explicit model-readiness gates. It currently lists *Synechococcus elongatus* PCC 7942 and *Phaeodactylum tricornutum* as evidence profiles, not executable species-specific models. The GUI permits the generic reduced-model demonstration only; selecting either named species is intentionally blocked until its condition-matched kinetic parameters and stoichiometry have been extracted, calibrated and independently tested. See [the organism model catalogue](docs/ORGANISM_MODEL_CATALOGUE.md).
+
+## Engineering release status
+
+See [FINAL_RELEASE_STATUS.md](docs/FINAL_RELEASE_STATUS.md) for the implemented / computationally tested / experimentally validated distinction and the remaining research gates. The project is not a validated 3-D multiphysics digital twin. The Windows GUI currently runs the Tier-2 1-D spatial model. Experimental calibration, independent holdout validation and verified CFD coupling remain outstanding.

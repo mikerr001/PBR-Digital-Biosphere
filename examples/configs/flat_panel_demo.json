@@ -1,0 +1,49 @@
+{
+  "config": {
+    "length_m": 1.0,
+    "cross_section_m2": 0.01,
+    "cells": 20,
+    "flow_m3_s": 0.00001,
+    "axial_dispersion_m2_s": 0.00001,
+    "optical_path_m": 0.05,
+    "biomass_absorption_m2_g": 8.0,
+    "incident_par_umol_m2_s": 150.0,
+    "kLa_o2_s": 0.00002,
+    "oxygen_saturation_mmol_l": 0.25,
+    "wall_heat_transfer_w_m2_k": 5.0,
+    "wall_area_per_volume_m2_m3": 20.0,
+    "coolant_temperature_k": 298.15,
+    "volumetric_heat_capacity_j_m3_k": 4180000.0,
+    "thermal_diffusivity_m2_s": 0.00000014
+  },
+  "initial": {
+    "biomass_g_l": 0.1,
+    "dic_mmol_l": 2.0,
+    "oxygen_mmol_l": 0.2,
+    "nitrogen_mmol_l": 1.0,
+    "phosphorus_mmol_l": 0.1,
+    "temperature_k": 298.15
+  },
+  "inlet": {
+    "biomass_g_l": 0.1,
+    "dic_mmol_l": 2.0,
+    "oxygen_mmol_l": 0.2,
+    "nitrogen_mmol_l": 1.0,
+    "phosphorus_mmol_l": 0.1,
+    "temperature_k": 298.15
+  },
+  "parameters": {
+    "mu_max": 0.35,
+    "decay": 0.01,
+    "k_light": 100.0,
+    "k_n": 0.1,
+    "k_p": 0.01,
+    "k_c": 0.2,
+    "respiration": 0.5,
+    "respiratory_quotient": 1.0,
+    "photosynthetic_quotient": 1.0,
+    "q_c": 35.0,
+    "q_n": 8.0,
+    "q_p": 0.8
+  }
+}
