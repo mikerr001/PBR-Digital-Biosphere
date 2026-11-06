@@ -91,3 +91,8 @@ Python 3.10–3.12 are supported.
 
 ## Safety
 Research simulator only. Do not use it to size, operate or certify human oxygen supply, underwater habitats, breathable atmospheres or pressure vessels.
+
+
+## Windows desktop workstation
+
+For a local desktop interface, follow [the Windows workstation guide](docs/WINDOWS_WORKSTATION.md). After installing the project with `pip install -e ".[dev]"`, double-click `start_simulator.bat` to open the spatial reactor GUI, or run `python -m pbrbiosphere.desktop_app`. For the automated test + simulation + integrity-check + plotting workflow, run `run_windows_demo.bat`. The GUI and scripts use the Tier-2 1-D model and illustrative parameters; see the guide for fidelity limits.
