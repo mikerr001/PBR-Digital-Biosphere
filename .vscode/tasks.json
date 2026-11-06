@@ -1,0 +1,26 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "PBR: Launch desktop simulator",
+      "type": "shell",
+      "command": "${workspaceFolder}\\.venv\\Scripts\\python.exe",
+      "args": ["-m", "pbrbiosphere.desktop_app"],
+      "problemMatcher": []
+    },
+    {
+      "label": "PBR: Run tests",
+      "type": "shell",
+      "command": "${workspaceFolder}\\.venv\\Scripts\\python.exe",
+      "args": ["-m", "pytest", "-q"],
+      "group": "test",
+      "problemMatcher": []
+    },
+    {
+      "label": "PBR: Full Windows demo",
+      "type": "shell",
+      "command": "${workspaceFolder}\\run_windows_demo.bat",
+      "problemMatcher": []
+    }
+  ]
+}
