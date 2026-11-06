@@ -17,6 +17,7 @@ from .run_artifacts import write_spatial_result
 from .spatial_reactor import (
     SpatialInitialState, SpatialReactorConfig, simulate_spatial_reactor,
 )
+from .organisms.registry import get_organism, require_executable_organism
 
 
 class SimulatorApp:
@@ -43,6 +44,7 @@ class SimulatorApp:
             "phosphorus": tk.StringVar(value="0.1"),
             "temperature_k": tk.StringVar(value="298.15"),
         }
+        self.organism_var = tk.StringVar(value="generic_reduced_demo")
         self._build()
         self._set_status("Ready. Values are illustrative; this model is not experimentally validated.")
 
@@ -63,6 +65,14 @@ class SimulatorApp:
         plot_frame = ttk.LabelFrame(body, text="Simulation results", padding=6)
         plot_frame.pack(side="left", fill="both", expand=True)
 
+        ttk.Label(controls, text="Organism model").grid(row=0, column=0, sticky="w", pady=2)
+        organism_box = ttk.Combobox(
+            controls, textvariable=self.organism_var, state="readonly", width=27,
+            values=("generic_reduced_demo", "synechococcus_elongatus_pcc7942", "phaeodactylum_tricornutum"),
+        )
+        organism_box.grid(row=0, column=1, sticky="ew", padx=(8, 0), pady=2)
+        organism_box.bind("<<ComboboxSelected>>", self._organism_changed)
+
         fields = [
             ("duration_h", "Duration (h)"),
             ("output_points", "Output time points"),
@@ -82,13 +92,13 @@ class SimulatorApp:
             ("temperature_k", "Initial temperature (K)"),
         ]
         for row, (key, label) in enumerate(fields):
-            ttk.Label(controls, text=label).grid(row=row, column=0, sticky="w", pady=2)
+            ttk.Label(controls, text=label).grid(row=row + 1, column=0, sticky="w", pady=2)
             ttk.Entry(controls, textvariable=self.vars[key], width=15).grid(
-                row=row, column=1, sticky="ew", padx=(8, 0), pady=2
+                row=row + 1, column=1, sticky="ew", padx=(8, 0), pady=2
             )
         controls.columnconfigure(1, weight=1)
         self.run_button = ttk.Button(controls, text="Run simulation", command=self.run)
-        self.run_button.grid(row=len(fields), column=0, columnspan=2, sticky="ew", pady=(12, 4))
+        self.run_button.grid(row=len(fields) + 2, column=0, columnspan=2, sticky="ew", pady=(12, 4))
         ttk.Button(controls, text="Open results folder", command=self.open_results).grid(
             row=len(fields) + 1, column=0, columnspan=2, sticky="ew"
         )
@@ -103,6 +113,13 @@ class SimulatorApp:
         footer.pack(fill="x", pady=(8, 0))
         self.status = ttk.Label(footer, text="", wraplength=1050)
         self.status.pack(anchor="w")
+
+    def _organism_changed(self, _event=None):
+        profile = get_organism(self.organism_var.get())
+        if profile.executable:
+            self._set_status("Generic reduced-model demonstration selected. Outputs are illustrative, not species-specific.")
+        else:
+            self._set_status(f"{profile.display_name}: evidence profile only; executable species kinetics are not yet available.")
 
     def _draw_empty(self):
         for ax in self.axes.flat:
@@ -128,6 +145,7 @@ class SimulatorApp:
         self.run_button.configure(state="disabled")
         self.root.update_idletasks()
         try:
+            organism = require_executable_organism(self.organism_var.get())
             duration_s = self._number("duration_h") * 3600
             output_points = int(self._number("output_points"))
             config = SpatialReactorConfig(
@@ -164,6 +182,8 @@ class SimulatorApp:
                 "model": {
                     "id": "PBR-SPATIAL-1D-001", "version": "0.1.0",
                     "fidelity_tier": 2, "validation_status": "UNVALIDATED",
+                    "organism_profile": organism.organism_id,
+                    "organism_model_status": organism.model_status,
                 },
                 "geometry": {"source": "desktop-user-input", "units": "m"},
                 "inputs": {
@@ -180,6 +200,7 @@ class SimulatorApp:
                     "parameter_register_revision": "demo-defaults",
                     "datasets": [],
                     "operator_notes": "User inputs and illustrative defaults; not calibrated.",
+                    "organism_limitations": list(organism.limitations),
                 },
             }
             write_spatial_result(result, output, manifest)
@@ -191,7 +212,7 @@ class SimulatorApp:
                 "temperature_k": float(result.temperature_k[-1].mean()),
             }
             self._set_status(
-                f"Run complete: {output} | Tier 2 | UNVALIDATED | "
+                f"Run complete: {output} | Tier 2 | UNVALIDATED | {organism.display_name} | "
                 f"Final spatial means: {json.dumps(final)}"
             )
         except Exception as exc:
