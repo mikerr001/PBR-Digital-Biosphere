@@ -73,7 +73,7 @@ VS Code is useful but not required. It is the development environment for editin
 code .
 ```
 
-If the `code` command is not on PATH, open VS Code, choose **File → Open Folder**, and select the `PBR-Digital-Biosphere-Windows` directory. Select the interpreter at `.venv\Scripts\python.exe` using **Ctrl+Shift+P → Python: Select Interpreter**. Use the integrated terminal to run the same commands above.
+If the `code` command is not on PATH, open VS Code, choose **File → Open Folder**, and select the `PBR-Digital-Biosphere-Windows` directory. Select the interpreter at `.venv\Scripts\python.exe` using **Ctrl+Shift+P → Python: Select Interpreter**. Use the integrated terminal to run the same commands above. The repository also includes VS Code tasks: open **Terminal → Run Task** and choose **PBR: Launch desktop simulator**, **PBR: Run tests**, or **PBR: Full Windows demo**.
 
 ## Fidelity and limits
 
