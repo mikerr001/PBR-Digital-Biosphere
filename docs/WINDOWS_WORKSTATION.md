@@ -19,6 +19,16 @@ python -m pip install --upgrade pip
 pip install -e ".[dev]"
 ```
 
+## Launch the desktop simulator
+
+Double-click `start_simulator.bat`, or run:
+
+```bat
+.venv\\Scripts\\python.exe -m pbrbiosphere.desktop_app
+```
+
+The desktop interface lets you change reactor length, cross-section, axial cell count, flow, dispersion, incident PAR, optical path, oxygen kLa, initial biomass, DIC, oxygen, nitrogen, phosphorus and temperature. It displays initial/final axial profiles and writes a timestamped run archive plus manifest under `results/`. The interface is a front end to the same Tier-2 numerical model; it does not add CFD or experimental validation.
+
 ## Run the complete local workflow
 
 Double-click `run_windows_demo.bat`, or run it from Command Prompt:
@@ -57,7 +67,7 @@ The comparison linearly maps the coarse-grid fields onto the finer grid and repo
 
 ## Opening the project in VS Code
 
-VS Code is useful but not required. From the repository root:
+VS Code is useful but not required. It is the development environment for editing the Python source, inspecting the project, running tests and debugging; the desktop simulator itself can run without VS Code. From the repository root:
 
 ```bat
 code .
