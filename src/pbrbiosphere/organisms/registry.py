@@ -97,7 +97,7 @@ def get_organism(organism_id: str) -> OrganismProfile:
     except KeyError as exc:
         raise ValueError(
             f"Unknown organism profile {organism_id!r}; available: "
-            + ", ".join(sorted(_PROFILES))
+            + "Available profiles: " + ", ".join(sorted(_PROFILES))
         ) from exc
 
 
