@@ -68,6 +68,7 @@ def validate_run(run_dir: str | Path) -> dict:
             "final_mean": float(np.mean(field[-1])),
         }
 
+    solver_success = bool(manifest.get("results", {}).get("solver_success", False))
     return {
         "run_id": manifest.get("run_id", "unknown"),
         "integrity": "PASS",
@@ -78,7 +79,8 @@ def validate_run(run_dir: str | Path) -> dict:
         "spatial_cells": int(x.size),
         "duration_s": float(time[-1] - time[0]),
         "fields": field_report,
-        "solver_success": bool(manifest.get("results", {}).get("solver_success", False)),
+        "solver_success": solver_success,
+        "solver_status": "PASS" if solver_success else "FAIL",
         "physical_validation": "NOT_ESTABLISHED",
         "notes": [
             "These checks do not prove conservation or physical accuracy.",
@@ -99,16 +101,23 @@ def compare_spatial_runs(reference_dir: str | Path, refined_dir: str | Path) -> 
         raise ValueError("Runs must use identical output time arrays")
     if b["x_m"].size <= a["x_m"].size:
         raise ValueError("The second run must have a strictly finer spatial grid")
-    if not (np.isclose(a["x_m"][0], b["x_m"][0]) and
-            np.isclose(a["x_m"][-1], b["x_m"][-1])):
+    da = float(np.mean(np.diff(a["x_m"])))
+    db = float(np.mean(np.diff(b["x_m"])))
+    domain_a = (a["x_m"][0] - da / 2, a["x_m"][-1] + da / 2)
+    domain_b = (b["x_m"][0] - db / 2, b["x_m"][-1] + db / 2)
+    if not np.allclose(domain_a, domain_b, rtol=1e-8, atol=1e-10):
         raise ValueError("Runs must cover the same spatial domain")
+    common = (b["x_m"] >= a["x_m"][0]) & (b["x_m"] <= a["x_m"][-1])
+    if common.sum() < 2:
+        raise ValueError("Spatial grids have insufficient common interior points")
 
     metrics = {}
     for name in FIELDS:
         ref = a[name]
-        fine = b[name]
+        fine = b[name][:, common]
+        target_x = b["x_m"][common]
         mapped = np.vstack([
-            np.interp(b["x_m"], a["x_m"], row) for row in ref
+            np.interp(target_x, a["x_m"], row) for row in ref
         ])
         scale = max(float(np.linalg.norm(fine.ravel())), 1e-14)
         rel_l2 = float(np.linalg.norm((fine - mapped).ravel()) / scale)
@@ -118,6 +127,7 @@ def compare_spatial_runs(reference_dir: str | Path, refined_dir: str | Path) -> 
         "refined_run": mb.get("run_id", "unknown"),
         "reference_cells": int(a["x_m"].size),
         "refined_cells": int(b["x_m"].size),
+        "comparison_points": int(common.sum()),
         "relative_l2_difference": metrics,
         "interpretation": "GRID_SENSITIVITY_DIAGNOSTIC_ONLY",
         "formal_gci": False,
