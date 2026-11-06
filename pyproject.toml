@@ -22,3 +22,4 @@ python_files = ["test_*.py"]
 
 [project.scripts]
 pbr-run-spatial = "pbrbiosphere.cli:main"
+pbr-simulator = "pbrbiosphere.desktop_app:main"
