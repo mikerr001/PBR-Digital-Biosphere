@@ -39,7 +39,7 @@ def analytic_volume_accounting() -> tuple[float, float, float, float]:
     )
     boss_volume = 6 * math.pi * (PORT_BOSS_OD / 2) ** 2 * BOSS_PROJECTION
     existing_bore_volume = (
-        6 * math.pi * (PORT_BORE_D / 2) ** 2 * (BOSS_PROJECTION + WALL + 2)
+        6 * math.pi * (PORT_BORE_D / 2) ** 2 * (BOSS_PROJECTION + WALL)
     )
     baseline = shell + boss_volume - existing_bore_volume
     port_removal = (
