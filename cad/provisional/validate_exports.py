@@ -44,13 +44,8 @@ def main() -> None:
     step_solid = step_solids[0]
     if not step_solid.isValid():
         raise RuntimeError("STEP B-rep is invalid")
-    step_extents = tuple(float(v) for v in step_solid.BoundingBox().toTuple()[1])
-    # BoundingBox.toTuple is (xmin, xmax, ymin, ymax, zmin, zmax).
-    step_extents = (
-        step_solid.BoundingBox().xlen,
-        step_solid.BoundingBox().ylen,
-        step_solid.BoundingBox().zlen,
-    )
+    step_box = step_solid.BoundingBox()
+    step_extents = (step_box.xlen, step_box.ylen, step_box.zlen)
     for actual, expected in zip(step_extents, EXPECTED_EXTENTS_MM):
         if abs(actual - expected) > EXTENT_TOLERANCE_MM:
             raise RuntimeError(f"STEP extents {step_extents} do not match expected {EXPECTED_EXTENTS_MM}")
