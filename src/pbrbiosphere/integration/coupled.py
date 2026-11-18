@@ -87,7 +87,9 @@ def run_coupled_simulation(days: float, points: int, geometry: FlatPanelGeometry
 
     def fun(t, y): return evaluate(t, y)[0]
     sample = np.linspace(0.0, days, points)
-    all_t, all_y, current = [], [], y0.copy()
+    all_t: list[float] = []
+    all_y: list[list[float]] = []
+    current = y0.copy()
     for left, right in zip(_forcing_boundaries(days, env)[:-1], _forcing_boundaries(days, env)[1:]):
         local = sample[(sample >= left - 1e-12) & (sample <= right + 1e-12)]
         if len(local) == 0 or abs(local[0] - left) > 1e-10: local = np.insert(local, 0, left)
