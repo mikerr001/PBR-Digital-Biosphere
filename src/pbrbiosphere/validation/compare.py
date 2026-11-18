@@ -20,7 +20,7 @@ def compare_csv(observation_csv: str, observed_column: str,
     if "time_days" in obs and "time_days" in pred:
         if not obs["time_days"].equals(pred["time_days"]):
             raise ValueError("time_days columns must match exactly; align explicitly first")
-    result = {
+    result: dict[str, int | float | None] = {
         "n": int(len(obs)),
         "mae": mae(obs[observed_column], pred[predicted_column]),
         "rmse": rmse(obs[observed_column], pred[predicted_column]),
