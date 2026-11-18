@@ -34,7 +34,8 @@ def run_simulation(days: float = 5.0, points: int = 501,
     env.validate()
     y0 = np.array([s.biomass, s.dic, s.oxygen, s.nitrogen, s.phosphorus], dtype=float)
     sample_times = np.linspace(0.0, days, points)
-    all_t, all_y = [], []
+    all_t: list[float] = []
+    all_y: list[list[float]] = []
     current = y0.copy()
     boundaries = _forcing_boundaries(days, env)
 
