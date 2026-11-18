@@ -71,6 +71,11 @@ def decide(snapshot: SensorSnapshot, limits: ControlLimits) -> ControlDecision:
         if snapshot.age_s > limits.max_sensor_age_s: why.append("sensor snapshot is stale")
         if missing: why.append("missing readings: "+", ".join(missing))
         return ControlDecision("DEGRADED_HOLD", {"light_fraction":None,"gas_flow_fraction":None,"cooling_fraction":None}, tuple(why))
+    # The list-based missing-reading check above is not sufficient for static
+    # type narrowing; make the validated measurement contract explicit.
+    assert snapshot.temperature_c is not None
+    assert snapshot.dissolved_o2_mmol_l is not None
+    assert snapshot.par_umol_m2_s is not None
     if snapshot.dissolved_o2_mmol_l < 0 or snapshot.par_umol_m2_s < 0 or snapshot.temperature_c <= -273.15:
         return ControlDecision("DEGRADED_HOLD", {"light_fraction":None,"gas_flow_fraction":None,"cooling_fraction":None}, ("physically invalid sensor value",))
     actions={"light_fraction":limits.max_light_fraction,"gas_flow_fraction":0.0,"cooling_fraction":0.0}
