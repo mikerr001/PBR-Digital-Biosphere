@@ -1,0 +1,81 @@
+name: Provisional CAD and core verification
+
+on:
+  push:
+    branches: [phase-3-provisional-cad]
+  pull_request:
+    branches: [windows-simulator-completion, main]
+    paths:
+      - "cad/provisional/**"
+      - "src/**"
+      - "tests/**"
+      - "pyproject.toml"
+      - ".github/workflows/provisional-cad.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  core-tests:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+      - name: Install project and test dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -e ".[dev]"
+      - name: Run core test suite
+        run: python -m pytest -q
+
+  type-check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+      - name: Install project and mypy
+        run: |
+          python -m pip install --upgrade pip
+          pip install -e .
+          pip install mypy
+      - name: Run static type checking
+        run: mypy --ignore-missing-imports src/pbrbiosphere
+
+  cad-kernels:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+      - name: Install OpenSCAD
+        run: |
+          sudo apt-get update
+          sudo apt-get install --yes openscad
+      - name: Install CadQuery and mesh validation dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install cadquery==2.8.0 trimesh
+      - name: Generate CadQuery STEP and STL
+        run: |
+          python cad/provisional/flat_panel_reactor.py \
+            --step results/flat_panel_reactor.step \
+            --stl results/flat_panel_reactor_cadquery.stl
+      - name: Render OpenSCAD model
+        run: |
+          mkdir -p results
+          openscad -o results/flat_panel_reactor_openscad.stl \
+            cad/provisional/flat_panel_reactor.scad
+      - name: Validate exported geometry
+        run: |
+          python cad/provisional/validate_exports.py \
+            --step results/flat_panel_reactor.step \
+            --cadquery-stl results/flat_panel_reactor_cadquery.stl \
+            --openscad-stl results/flat_panel_reactor_openscad.stl
